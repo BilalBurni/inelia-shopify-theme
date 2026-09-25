@@ -1,0 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "library_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "scrim_opacity": 55,
+        "height": "compact",
+        "show_rings": true,
+        "content_position": "center",
+        "eyebrow": "The Catalogue",
+        "heading": "Library",
+        "text": "Every release from every artist on the label — newest first.",
+        "button_1_label": "",
+        "button_2_label": ""
+      }
+    },
+    "library": {
+      "type": "inelia-library",
+      "settings": {
+        "eyebrow": "The Whole Catalogue",
+        "heading": "All Releases",
+        "subheading": "Every release, in one place — newest first.",
+        "background": "ivory"
+      }
+    }
+  },
+  "order": [
+    "library_hero",
+    "library"
+  ]
+}

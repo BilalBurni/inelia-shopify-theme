@@ -1,0 +1,54 @@
+{% comment %}
+  Inelia Records — one "choose your free song" card.
+  Fires the Klaviyo "Selected Free Single" event (+ Free Song Choice
+  profile property) via assets/free-song-funnel.js, then redirects to
+  the artist's download page. See sections/inelia-free-song-choice.liquid.
+
+  Params:
+    image        — image object (optional; a gold ring placeholder shows without it)
+    name         — artist name
+    song_title   — the free single's title
+    campaign     — Klaviyo Campaign property, e.g. "Instagram Free Single"
+    redirect_url — the artist's download page
+    button_label — CTA text, e.g. "Choose This Song"
+    attributes   — block.shopify_attributes, for theme-editor targeting (optional)
+{% endcomment %}
+<button
+  type="button"
+  class="inelia-artist-card inelia-free-song-card inelia-reveal"
+  data-free-song-choose
+  data-free-song-artist="{{ name | escape }}"
+  data-free-song-title="{{ song_title | escape }}"
+  data-free-song-campaign="{{ campaign | escape }}"
+  data-free-song-redirect="{{ redirect_url }}"
+  {{ attributes }}
+>
+  <span class="inelia-artist-card__img">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 900
+        | image_tag:
+          loading: 'lazy',
+          widths: '360, 540, 720, 900',
+          sizes: '(min-width: 990px) 25vw, 50vw',
+          alt: name
+      }}
+    {%- else -%}
+      <span class="inelia-artist-card__placeholder" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="90" stroke="#C8A24E" stroke-width="0.8"/>
+          <circle cx="100" cy="100" r="60" stroke="#C8A24E" stroke-width="0.8"/>
+          <circle cx="100" cy="100" r="30" stroke="#C8A24E" stroke-width="0.8"/>
+        </svg>
+      </span>
+    {%- endif -%}
+  </span>
+  <span class="inelia-free-song-card__body">
+    <h3>{{ name }}</h3>
+    {%- if song_title != blank -%}
+      <p>{{ song_title }}</p>
+    {%- endif -%}
+    <span class="inelia-btn inelia-btn--gold-solid inelia-free-song-card__cta">{{ button_label | default: 'Choose This Song' }}</span>
+  </span>
+</button>

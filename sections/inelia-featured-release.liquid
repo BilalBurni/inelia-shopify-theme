@@ -1,0 +1,283 @@
+{% comment %}
+  Inelia Records — Featured Release
+  On an artist page this auto-pulls the newest `release` metaobject whose
+  artist reference matches the current artist — matched by handle (the
+  "Artist handle" setting, or the page handle when that is blank).
+  When no matching release is found (e.g. the homepage compilation feature)
+  it falls back to the manual product / text settings below.
+
+  Text settings accept an {artist} token, replaced with the current
+  artist's name — e.g. "Latest From {artist}".
+
+  An artist with no release entry yet renders nothing at all, rather than
+  a lone heading over an empty row.
+{% endcomment %}
+
+{%- liquid
+  # Which artist are we on? explicit setting wins, else the page handle
+  # (e.g. /pages/roxy-vale → "roxy-vale" → artist metaobject handle).
+  assign artist_handle = section.settings.artist_handle
+  if artist_handle == blank
+    assign artist_handle = page.handle
+    if metaobject != blank
+      assign artist_handle = metaobject.system.handle
+    endif
+  endif
+
+  # The artist's display name, for the {artist} token in the headings.
+  # (Metaobject fields are only readable inside a `for` loop on this store.)
+  assign artist_name = ''
+  if artist_handle != blank
+    for artist in shop.metaobjects.artist.values
+      if artist.system.handle == artist_handle
+        assign artist_name = artist.name
+        break
+      endif
+    endfor
+  endif
+
+  # Metaobject fields are only readable inside a `for` loop (the lazy
+  # collection returns empty via .first / index / sort). So we find the
+  # newest matching release's handle first, then re-loop to capture its
+  # data into plain variables/objects that survive outside the loop.
+
+  # Pass 1 — newest release handle for this artist.
+  assign newest_handle = ''
+  assign newest_stamp = 0
+  if artist_handle != blank
+    for release in shop.metaobjects.release.values
+      if release.artist.value.system.handle == artist_handle
+        assign stamp = release.release_date | date: '%Y%m%d' | times: 1
+        if stamp >= newest_stamp
+          assign newest_stamp = stamp
+          assign newest_handle = release.system.handle
+        endif
+      endif
+    endfor
+  endif
+
+  # Pass 2 — capture the chosen release's data.
+  assign has_release = false
+  if newest_handle != blank
+    for release in shop.metaobjects.release.values
+      if release.system.handle == newest_handle
+        assign has_release = true
+        assign rel_title = release.title
+        assign rel_desc = release.description
+        assign rel_artist = release.artist.value.name
+        assign rel_product = release.product.value
+        assign rel_cover = release.cover_art.value
+        assign rel_sky = release.sky_pilot_url
+        break
+      endif
+    endfor
+  endif
+
+  if has_release
+    # Dynamic — everything from the metaobject. Art falls back to the
+    # linked product image when `cover_art` is unset.
+    assign release_artist = rel_artist | default: section.settings.artist
+    assign release_title = rel_title
+    assign release_desc = rel_desc
+    assign rel_img = rel_cover
+    if rel_img == blank and rel_product != blank
+      assign rel_img = rel_product.featured_image
+    endif
+    # A release entry doesn't always carry a linked product yet, and the Sky
+    # Pilot field is deliberately left empty (its URLs are per-member, so no
+    # fixed link can live here). Rather than bottom out at "#", fall through to
+    # the product picked on the section itself before giving up.
+    assign listen_url = rel_product.url | default: rel_sky | default: section.settings.product.url | default: section.settings.album_link
+    assign album_url = listen_url
+  else
+    # Manual fallback — the original behaviour (homepage feature, etc.).
+    assign featured = section.settings.product
+    assign release_artist = section.settings.artist
+    assign release_title = section.settings.title
+    assign release_desc = section.settings.description
+    assign release_url = section.settings.album_link
+    if featured != blank
+      if release_title == blank
+        assign release_title = featured.title
+      endif
+      if release_url == blank
+        assign release_url = featured.url
+      endif
+    endif
+    assign listen_url = section.settings.listen_link | default: release_url
+    assign album_url = release_url
+  endif
+
+  # Whatever the route, a button with nowhere to go doesn't get rendered.
+  # An "#" link that silently does nothing is worse than no button at all.
+
+  # A new artist often has no release entry yet. With nothing to show, the
+  # section would be a "Latest From X" heading over an empty row — which
+  # reads as broken. Render nothing instead, unless the theme editor needs
+  # it visible to be configurable.
+  assign release_render = true
+  if has_release == false and release_title == blank and featured == blank
+    assign release_render = false
+  endif
+  if request.design_mode
+    assign release_render = true
+  endif
+
+  # {artist} in any heading resolves to the current artist's name.
+  assign release_eyebrow = section.settings.eyebrow | replace: '{artist}', artist_name
+  assign release_heading = section.settings.heading | replace: '{artist}', artist_name
+-%}
+
+{%- if release_render -%}
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if release_eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ release_eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ release_heading }}</h2>
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-release inelia-reveal">
+    <div class="inelia-release__art">
+      {%- if has_release and rel_img != blank -%}
+        {{
+          rel_img
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '550, 800, 1200', sizes: '(min-width: 990px) 50vw, 100vw', alt: release_title
+        }}
+      {%- elsif section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '550, 800, 1200', sizes: '(min-width: 990px) 50vw, 100vw', alt: release_title
+        }}
+      {%- elsif has_release == false and featured != blank and featured.featured_image != blank -%}
+        {{
+          featured.featured_image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '550, 800, 1200', sizes: '(min-width: 990px) 50vw, 100vw', alt: release_title
+        }}
+      {%- endif -%}
+    </div>
+    <div class="inelia-release__info">
+      {%- if release_artist != blank -%}
+        <span class="inelia-eyebrow" style="margin-bottom: 10px;">{{ release_artist }}</span>
+      {%- endif -%}
+      <h3>{{ release_title }}</h3>
+      {%- if release_desc != blank -%}
+        <p>{{ release_desc }}</p>
+      {%- endif -%}
+      <div class="inelia-release__actions">
+        {%- if section.settings.listen_label != blank and listen_url != blank -%}
+          <a class="inelia-btn inelia-btn--gold" href="{{ listen_url }}">
+            {{- section.settings.listen_label -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.album_label != blank and album_url != blank -%}
+          <a class="inelia-btn inelia-btn--dark" href="{{ album_url }}">
+            {{- section.settings.album_label -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Inelia Featured Release",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On an artist page this auto-pulls the newest release for that artist from the Release metaobjects. The manual fields below are only used as a fallback (e.g. the homepage feature). Headings accept {artist}, replaced with the artist's name. If the artist has no release entry and no fallback is set, the whole section is hidden."
+    },
+    {
+      "type": "text",
+      "id": "artist_handle",
+      "label": "Artist handle (optional)",
+      "info": "Leave blank to use the page handle (e.g. /pages/roxy-vale → roxy-vale). Set only to force a specific artist."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Just Released"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Release"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Release product",
+      "info": "Pulls artwork, title and link automatically. Fields below override it."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Artwork override (1:1)"
+    },
+    {
+      "type": "text",
+      "id": "artist",
+      "label": "Artist name",
+      "default": "Artist Name"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Release title override"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "A short introduction to the newest release — what it sounds like and why it matters."
+    },
+    {
+      "type": "text",
+      "id": "listen_label",
+      "label": "Listen button label",
+      "default": "Listen"
+    },
+    {
+      "type": "url",
+      "id": "listen_link",
+      "label": "Listen button link"
+    },
+    {
+      "type": "text",
+      "id": "album_label",
+      "label": "Album button label",
+      "default": "Explore Album"
+    },
+    {
+      "type": "url",
+      "id": "album_link",
+      "label": "Album button link override"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "ivory"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia Featured Release"
+    }
+  ]
+}
+{% endschema %}

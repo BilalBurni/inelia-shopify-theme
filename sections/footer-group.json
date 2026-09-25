@@ -1,0 +1,81 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "17710218196741d3eb": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "footer": {
+      "type": "inelia-footer",
+      "blocks": {
+        "menu_explore": {
+          "type": "menu",
+          "settings": {
+            "heading": "Explore",
+            "menu": "main-menu"
+          }
+        },
+        "menu_backstage": {
+          "type": "menu",
+          "settings": {
+            "heading": "BackStage Pass",
+            "menu": "footer-backstage"
+          }
+        },
+        "menu_label": {
+          "type": "menu",
+          "settings": {
+            "heading": "Label",
+            "menu": "footer-label"
+          }
+        },
+        "menu_support": {
+          "type": "menu",
+          "settings": {
+            "heading": "Support",
+            "menu": "footer-support"
+          }
+        }
+      },
+      "block_order": [
+        "menu_explore",
+        "menu_backstage",
+        "menu_label",
+        "menu_support"
+      ],
+      "settings": {
+        "tagline": "An independent label for music that inspires, empowers, and expands awareness.",
+        "show_newsletter": true,
+        "newsletter_heading": "Subscribe for New Releases",
+        "show_payment_icons": true,
+        "copyright_extra": "All Rights Reserved"
+      }
+    },
+    "single_app_grid_gxK43t": {
+      "type": "single-app-grid",
+      "name": "App Grid",
+      "settings": {
+        "include_margins": true,
+        "column_count": 4,
+        "block_widths": ""
+      }
+    }
+  },
+  "order": [
+    "17710218196741d3eb",
+    "footer",
+    "single_app_grid_gxK43t"
+  ]
+}

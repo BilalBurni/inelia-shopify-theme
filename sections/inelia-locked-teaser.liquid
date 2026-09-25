@@ -1,0 +1,234 @@
+{% comment %}
+  Inelia Records — BackStage Exclusives (locked teaser)
+  Premium locked cards shown to non-members so they can see that
+  exclusive content exists. Encourages curiosity, not frustration.
+
+  Works with the Appstle Membership app: place this section on artist
+  pages / the BackStage landing page. When Appstle detects an active
+  member, the "member content" pages it protects are unlocked; this
+  section's buttons route non-members to Join / Log In.
+
+  Headings and card text accept an {artist} token, replaced with the
+  current artist's name — e.g. "Fresh {artist} tracks before the world
+  hears them."
+{% endcomment %}
+
+{%- liquid
+  # Metaobject fields are only readable inside a `for` loop on this store.
+  assign artist_handle = page.handle
+  if metaobject != blank
+    assign artist_handle = metaobject.system.handle
+  endif
+
+  assign artist_name = ''
+  if artist_handle != blank
+    for artist in shop.metaobjects.artist.values
+      if artist.system.handle == artist_handle
+        assign artist_name = artist.name
+        break
+      endif
+    endfor
+  endif
+
+  assign artist_token = '{artist}'
+  assign locked_eyebrow = section.settings.eyebrow | replace: artist_token, artist_name
+  assign locked_heading = section.settings.heading | replace: artist_token, artist_name
+  assign locked_subheading = section.settings.subheading | replace: artist_token, artist_name
+-%}
+
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if locked_eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ locked_eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ locked_heading }}</h2>
+    {%- if locked_subheading != blank -%}
+      <p>{{ locked_subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  {%- comment -%}
+    These cards are a description of what the membership includes, not a menu.
+    They used to fall back to a shared destination when no link was set, which
+    meant every card on the page opened the same page — the "everything leads
+    to a generic page" problem. A card is now only a link if that specific card
+    has been given one. The real actions live in the button row below.
+  {%- endcomment -%}
+
+  <div class="inelia-locked__grid inelia-reveal{% if customer %} inelia-locked__grid--unlocked{% endif %}">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        # The {artist} token has to be substituted here rather than inline in
+        # the output tags: a literal "{" inside a {{ ... }} confuses Liquid's
+        # parser and throws "was not properly terminated".
+        assign card_href = block.settings.link
+        assign card_title = block.settings.title | replace: artist_token, artist_name
+        assign card_description = block.settings.description | replace: artist_token, artist_name
+      -%}
+      {%- if card_href != blank -%}
+        <a class="inelia-locked-card" href="{{ card_href }}" {{ block.shopify_attributes }} style="text-decoration: none; color: inherit;">
+      {%- else -%}
+        <div class="inelia-locked-card" {{ block.shopify_attributes }}>
+      {%- endif -%}
+        <div class="inelia-locked-card__lock" aria-hidden="true">
+          {%- if customer -%}
+            {%- comment -%} Unlocked padlock for signed-in members {%- endcomment -%}
+            <svg viewBox="0 0 24 24" stroke-width="2">
+              <rect x="5" y="11" width="14" height="9" rx="1"/>
+              <path d="M8 11V7a4 4 0 0 1 8 0"/>
+            </svg>
+          {%- else -%}
+            <svg viewBox="0 0 24 24" stroke-width="2">
+              <rect x="5" y="11" width="14" height="9" rx="1"/>
+              <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+            </svg>
+          {%- endif -%}
+        </div>
+        <h3>{{ card_title }}</h3>
+        {%- if card_description != blank -%}
+          <p>{{ card_description }}</p>
+        {%- endif -%}
+      {%- if card_href != blank -%}
+        </a>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="inelia-locked__actions inelia-reveal">
+    {%- if customer -%}
+      {%- comment -%} Signed-in: one button straight to their BackStage content {%- endcomment -%}
+      {%- if section.settings.member_cta_label != blank -%}
+        <a class="inelia-btn inelia-btn--gold" href="{{ section.settings.member_link | default: '#' }}">
+          {{- section.settings.member_cta_label -}}
+        </a>
+      {%- endif -%}
+    {%- else -%}
+      {%- if section.settings.join_label != blank -%}
+        <a class="inelia-btn inelia-btn--gold" href="{{ section.settings.join_link | default: '#' }}">
+          {{- section.settings.join_label -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.login_label != blank -%}
+        <a class="inelia-btn inelia-btn--dark" href="{{ routes.account_login_url }}">
+          {{- section.settings.login_label -}}
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Locked Teaser",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Members Only"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "BackStage Exclusives"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "{artist} is replaced with the artist's name on an artist page.",
+      "default": "A glimpse of what waits behind the curtain."
+    },
+    {
+      "type": "header",
+      "content": "Access control"
+    },
+    {
+      "type": "url",
+      "id": "member_link",
+      "label": "Member content link",
+      "info": "Where the button sends signed-in customers (their BackStage content — e.g. the members page). Keep it Appstle-protected so only active members get in."
+    },
+    {
+      "type": "text",
+      "id": "member_cta_label",
+      "label": "Member button label",
+      "default": "Enter BackStage"
+    },
+    {
+      "type": "text",
+      "id": "join_label",
+      "label": "Join button label",
+      "default": "Join BackStage"
+    },
+    {
+      "type": "url",
+      "id": "join_link",
+      "label": "Join button link"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Log in button label",
+      "default": "Log In"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "ivory"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Locked card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Exclusive Singles"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "info": "{artist} is replaced with the artist's name on an artist page.",
+          "default": "Fresh tracks before the world hears them."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)",
+          "info": "Leave empty and the card is plain text, which is usually what you want. Only set this if this one card should open somewhere specific."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Inelia Locked Teaser",
+      "blocks": [
+        { "type": "card", "settings": { "title": "Exclusive Singles", "description": "Fresh tracks before the world hears them." } },
+        { "type": "card", "settings": { "title": "Acoustic Versions", "description": "Stripped-back takes, members only." } },
+        { "type": "card", "settings": { "title": "Behind the Music", "description": "Lore, backstories and studio mysteries." } },
+        { "type": "card", "settings": { "title": "Lyrics Companion PDFs", "description": "Every word, beautifully typeset." } },
+        { "type": "card", "settings": { "title": "Bonus Artwork", "description": "Alternate covers and visual worlds." } },
+        { "type": "card", "settings": { "title": "Studio Notes", "description": "How each release came to life." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,178 @@
+{% comment %}
+  Inelia Records — Footer
+  Editorial footer per the homepage mockup: brand column with logo +
+  tagline, link columns (each block = heading + navigation menu),
+  optional newsletter signup and payment icons, quiet bottom bar with
+  copyright + policy links. App blocks (e.g. Judge.me) supported.
+{% endcomment %}
+
+<footer class="inelia-footer">
+  <div class="inelia-footer__grid">
+    <div class="inelia-footer__brand">
+      {%- if section.settings.logo != blank -%}
+        <a href="{{ routes.root_url }}" class="inelia-footer__logo-link">
+          {{
+            section.settings.logo
+            | image_url: width: 480
+            | image_tag: loading: 'lazy', widths: '240, 480', alt: shop.name, style: 'max-width: 180px; height: auto;'
+          }}
+        </a>
+      {%- else -%}
+        <a href="{{ routes.root_url }}" class="inelia-footer__logo">{{ shop.name | upcase }}</a>
+      {%- endif -%}
+      {%- if section.settings.tagline != blank -%}
+        <p class="inelia-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+
+      {%- comment -%}
+        Hidden on /pages/free-song — this page has its own Klaviyo signup
+        (the Instagram Free Single form), and testers were mistakenly
+        using this generic newsletter box instead, which subscribes to a
+        different list.
+      {%- endcomment -%}
+      {%- if section.settings.show_newsletter and page.handle != 'free-song' -%}
+        <div class="inelia-footer__newsletter">
+          {%- if section.settings.newsletter_heading != blank -%}
+            <h4>{{ section.settings.newsletter_heading }}</h4>
+          {%- endif -%}
+          {%- form 'customer', class: 'inelia-footer__newsletter-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input
+              id="InleiaFooterEmail"
+              type="email"
+              name="contact[email]"
+              class="inelia-footer__input"
+              value="{{ form.email }}"
+              placeholder="{{ 'newsletter.label' | t }}"
+              aria-label="{{ 'newsletter.label' | t }}"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              required
+            >
+            <button type="submit" class="inelia-btn inelia-btn--dark inelia-footer__submit" name="commit">
+              {{ 'newsletter.button_label' | t }}
+            </button>
+            {%- if form.errors -%}
+              <p class="inelia-footer__form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+            {%- endif -%}
+            {%- if form.posted_successfully? -%}
+              <p class="inelia-footer__form-msg">{{ 'newsletter.success' | t }}</p>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'menu' -%}
+          <div class="inelia-footer__col" {{ block.shopify_attributes }}>
+            {%- if block.settings.heading != blank -%}
+              <h4>{{ block.settings.heading }}</h4>
+            {%- endif -%}
+            {%- if block.settings.menu != blank -%}
+              {%- for link in block.settings.menu.links -%}
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        {%- when '@app' -%}
+          <div class="inelia-footer__app" {{ block.shopify_attributes }}>
+            {% render block %}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="inelia-footer__bottom">
+    <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}{% if section.settings.copyright_extra != blank %} · {{ section.settings.copyright_extra }}{% endif %}</span>
+    {%- if section.settings.show_payment_icons -%}
+      <div class="inelia-footer__payments">
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'inelia-footer__payment-icon' }}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Inelia Footer",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo",
+      "info": "Falls back to the store name in serif type."
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "An independent label for music that inspires, empowers, and expands awareness."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Subscribe for New Releases"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "copyright_extra",
+      "label": "Extra copyright text",
+      "default": "All Rights Reserved"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Explore"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Inelia Footer",
+      "blocks": [
+        { "type": "menu", "settings": { "heading": "Explore" } },
+        { "type": "menu", "settings": { "heading": "BackStage Pass" } },
+        { "type": "menu", "settings": { "heading": "Label" } },
+        { "type": "menu", "settings": { "heading": "Support" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

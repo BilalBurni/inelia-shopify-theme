@@ -1,0 +1,298 @@
+{% comment %}
+  Inelia Records — Voice Lineup
+  The artist roster as an accordion, read from the `artist` metaobjects in
+  Sort order. Replaces a hand-built collapsible_content list that had to be
+  edited by hand every time the roster changed — and had already fallen a
+  name behind.
+
+  Deliberately reuses Dawn's accordion markup and classes (component-accordion
+  / collapsible-content) so it is visually identical to the section it
+  replaces; only where the rows come from has changed.
+
+  Notes on metaobject access (verified on this store, see also
+  inelia-new-releases):
+  - Metaobject fields are only readable INSIDE a `{% for %}` loop over
+    `shop.metaobjects.artist.values` — `.first`, index access and the
+    `sort` filter return empty. So we sort manually and render via a
+    nested lookup loop.
+  - Sort order is padded into a fixed-width string key, otherwise "10"
+    would sort before "2".
+{% endcomment %}
+
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+{{ 'collapsible-content.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  # Pass 1 — build sortable "NNNN~handle" keys (fields work in-loop).
+  # Entries with no sort order fall to the end rather than jumping the queue.
+  assign keys = ''
+  for artist in shop.metaobjects.artist.values
+    assign so = artist.sort_order
+    if so == blank
+      assign so = 999
+    endif
+    assign entry = so | plus: 1000 | append: '~' | append: artist.system.handle
+    if forloop.first
+      assign keys = entry
+    else
+      assign keys = keys | append: ',' | append: entry
+    endif
+  endfor
+  assign ordered = keys | split: ','
+  assign ordered = ordered | sort
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="collapsible-content collapsible-{{ section.settings.layout }}-layout isolate{% if section.settings.layout == 'section' %} page-width{% elsif section.settings.layout == 'none' %} content-container content-container--full-width{% endif %}">
+    <div class="collapsible-content__wrapper section-{{ section.id }}-padding{% if section.settings.layout == 'section' %} content-container color-{{ section.settings.container_color_scheme }} gradient{% endif %}">
+      <div class="collapsible-content-wrapper-narrow">
+        <div
+          class="collapsible-content__header{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          style="text-align: {{ section.settings.heading_alignment }};"
+        >
+          {%- if section.settings.caption != blank -%}
+            <p class="caption-with-letter-spacing">
+              {{ section.settings.caption | escape }}
+            </p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="collapsible-content__heading inline-richtext {{ section.settings.heading_size }}">
+              {{ section.settings.heading }}
+            </h2>
+          {%- endif -%}
+        </div>
+        <div class="grid grid--1-col collapsible-content__grid{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          <div class="grid__item">
+            {%- assign shown = 0 -%}
+            {%- for key in ordered -%}
+              {%- assign khandle = key | split: '~' | last -%}
+              {%- for artist in shop.metaobjects.artist.values -%}
+                {%- if artist.system.handle == khandle -%}
+                  {%- liquid
+                    assign shown = shown | plus: 1
+
+                    # "Roxy Vale - Soul Rock / Pop Rock", genre omitted when unset.
+                    assign row_title = artist.name
+                    if artist.genre != blank
+                      assign row_title = row_title | append: ' - ' | append: artist.genre
+                    endif
+
+                    # Once the Artist definition has web pages turned on, each
+                    # entry carries its own url. Until then, the Shopify page of
+                    # the same handle is where the artist lives.
+                    assign row_url = artist.system.url
+                    if row_url == blank
+                      assign row_url = '/pages/' | append: khandle
+                    endif
+                  -%}
+                  <div class="accordion{% if section.settings.layout == 'row' %} content-container color-{{ section.settings.container_color_scheme }} gradient{% endif %}">
+                    <details
+                      id="Details-{{ khandle }}-{{ section.id }}"
+                      {% if section.settings.open_first_row and shown == 1 %}
+                        open
+                      {% endif %}
+                    >
+                      <summary id="Summary-{{ khandle }}-{{ section.id }}">
+                        {% render 'icon-accordion', icon: section.settings.icon %}
+                        <h3 class="accordion__title inline-richtext h4">{{ row_title | escape }}</h3>
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </summary>
+                      <div
+                        class="accordion__content rte"
+                        id="CollapsibleAccordion-{{ khandle }}-{{ section.id }}"
+                        role="region"
+                        aria-labelledby="Summary-{{ khandle }}-{{ section.id }}"
+                      >
+                        {%- if section.settings.show_photo and artist.photo.value != blank -%}
+                          {{
+                            artist.photo.value
+                            | image_url: width: 900
+                            | image_tag:
+                              loading: 'lazy',
+                              widths: '300, 500, 700, 900',
+                              sizes: '(min-width: 750px) 45vw, 90vw',
+                              alt: artist.name
+                          }}
+                        {%- endif -%}
+                        {%- comment -%}
+                          Bio is a rich text field: it stringifies to raw JSON
+                          unless it goes through metafield_tag. Tagline is plain
+                          text and prints directly.
+                        {%- endcomment -%}
+                        {%- if section.settings.row_text == 'bio' -%}
+                          {{ artist.bio | metafield_tag }}
+                        {%- elsif section.settings.row_text == 'tagline' and artist.tagline != blank -%}
+                          <p>{{ artist.tagline | escape }}</p>
+                        {%- endif -%}
+                        {%- if section.settings.link_label != blank -%}
+                          <p><a href="{{ row_url }}">{{ section.settings.link_label | escape }}</a></p>
+                        {%- endif -%}
+                      </div>
+                    </details>
+                  </div>
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Voice Lineup",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Lists every Artist metaobject in Sort order. A new artist appears here automatically — there is nothing to add by hand."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Voice Lineup"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Row icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check_mark", "label": "Check mark" },
+        { "value": "play", "label": "Play" },
+        { "value": "star", "label": "Star" },
+        { "value": "heart", "label": "Heart" },
+        { "value": "lightning_bolt", "label": "Lightning bolt" }
+      ],
+      "default": "check_mark"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_photo",
+      "label": "Show artist photo in the row",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "row_text",
+      "label": "Row text",
+      "options": [
+        { "value": "bio", "label": "Full biography" },
+        { "value": "tagline", "label": "Tagline only" },
+        { "value": "none", "label": "No text" }
+      ],
+      "default": "bio"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Row link label",
+      "info": "Links through to the artist's page. Leave empty for no link.",
+      "default": "Explore Artist"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first_row",
+      "label": "Open first row by default",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "none", "label": "No container" },
+        { "value": "row", "label": "Row container" },
+        { "value": "section", "label": "Section container" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "container_color_scheme",
+      "label": "Container color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia Voice Lineup"
+    }
+  ]
+}
+{% endschema %}

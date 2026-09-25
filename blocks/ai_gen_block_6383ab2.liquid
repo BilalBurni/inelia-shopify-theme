@@ -1,0 +1,735 @@
+{% doc %}
+  @prompt
+    I want a small grouping of five songs they can listen to
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-music-player-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-music-player__header-{{ ai_gen_id }} {
+    margin-bottom: 20px;
+  }
+
+  .ai-music-player__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+
+  .ai-music-player__subtitle-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .ai-music-player__list-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+
+  .ai-music-player__track-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 8px;
+  }
+
+  .ai-music-player__track-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.hover_color }};
+  }
+
+  .ai-music-player__track-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.active_color }};
+  }
+
+  .ai-music-player__track-number-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .ai-music-player__track.active .ai-music-player__track-number-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-music-player__track-play-icon-{{ ai_gen_id }} {
+    display: none;
+    width: 24px;
+    height: 24px;
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-music-player__track.active .ai-music-player__track-play-icon-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-music-player__track-info-{{ ai_gen_id }} {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .ai-music-player__track-name-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ai-music-player__track-artist-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ai-music-player__track-duration-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .ai-music-player__controls-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-music-player__progress-container-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  .ai-music-player__progress-bar-{{ ai_gen_id }} {
+    width: 100%;
+    height: 6px;
+    background-color: {{ block.settings.progress_bg_color }};
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .ai-music-player__progress-fill-{{ ai_gen_id }} {
+    height: 100%;
+    background-color: {{ block.settings.accent_color }};
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  .ai-music-player__time-display-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+    margin-top: 4px;
+  }
+
+  .ai-music-player__buttons-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .ai-music-player__button-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: {{ block.settings.text_color }};
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-music-player__button-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-music-player__button-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-music-player__button-{{ ai_gen_id }}:disabled:hover {
+    transform: none;
+  }
+
+  .ai-music-player__button-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ai-music-player__button--play-{{ ai_gen_id }} svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ai-music-player__empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-music-player-{{ ai_gen_id }} {
+      padding: 16px;
+    }
+
+    .ai-music-player__track-{{ ai_gen_id }} {
+      padding: 10px;
+    }
+  }
+{% endstyle %}
+
+<music-player-{{ ai_gen_id }} class="ai-music-player-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.title != blank %}
+    <div class="ai-music-player__header-{{ ai_gen_id }}">
+      <h3 class="ai-music-player__title-{{ ai_gen_id }}">{{ block.settings.title }}</h3>
+      {% if block.settings.subtitle != blank %}
+        <p class="ai-music-player__subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% assign has_tracks = false %}
+  {% for i in (1..5) %}
+    {% liquid
+      assign track_name_key = 'track_' | append: i | append: '_name'
+      assign track_name = block.settings[track_name_key]
+      if track_name != blank
+        assign has_tracks = true
+        break
+      endif
+    %}
+  {% endfor %}
+
+  {% if has_tracks %}
+    <ul class="ai-music-player__list-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign track_name_key = 'track_' | append: i | append: '_name'
+          assign track_artist_key = 'track_' | append: i | append: '_artist'
+          assign track_url_key = 'track_' | append: i | append: '_url'
+          assign track_duration_key = 'track_' | append: i | append: '_duration'
+
+          assign track_name = block.settings[track_name_key]
+          assign track_artist = block.settings[track_artist_key]
+          assign track_url = block.settings[track_url_key]
+          assign track_duration = block.settings[track_duration_key]
+        %}
+
+        {% if track_name != blank %}
+          <li 
+            class="ai-music-player__track-{{ ai_gen_id }}" 
+            data-track-index="{{ forloop.index0 }}"
+            data-track-url="{{ track_url }}"
+          >
+            <div class="ai-music-player__track-number-{{ ai_gen_id }}">{{ forloop.index }}</div>
+            <svg class="ai-music-player__track-play-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <div class="ai-music-player__track-info-{{ ai_gen_id }}">
+              <p class="ai-music-player__track-name-{{ ai_gen_id }}">{{ track_name }}</p>
+              {% if track_artist != blank %}
+                <p class="ai-music-player__track-artist-{{ ai_gen_id }}">{{ track_artist }}</p>
+              {% endif %}
+            </div>
+            {% if track_duration != blank %}
+              <span class="ai-music-player__track-duration-{{ ai_gen_id }}">{{ track_duration }}</span>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="ai-music-player__controls-{{ ai_gen_id }}">
+      <div class="ai-music-player__progress-container-{{ ai_gen_id }}">
+        <div class="ai-music-player__progress-bar-{{ ai_gen_id }}">
+          <div class="ai-music-player__progress-fill-{{ ai_gen_id }}"></div>
+        </div>
+        <div class="ai-music-player__time-display-{{ ai_gen_id }}">
+          <span class="ai-music-player__current-time-{{ ai_gen_id }}">0:00</span>
+          <span class="ai-music-player__total-time-{{ ai_gen_id }}">0:00</span>
+        </div>
+      </div>
+
+      <div class="ai-music-player__buttons-{{ ai_gen_id }}">
+        <button class="ai-music-player__button-{{ ai_gen_id }} ai-music-player__button--prev-{{ ai_gen_id }}" aria-label="Previous track">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+          </svg>
+        </button>
+
+        <button class="ai-music-player__button-{{ ai_gen_id }} ai-music-player__button--play-{{ ai_gen_id }}" aria-label="Play">
+          <svg class="ai-music-player__play-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg class="ai-music-player__pause-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+          </svg>
+        </button>
+
+        <button class="ai-music-player__button-{{ ai_gen_id }} ai-music-player__button--next-{{ ai_gen_id }}" aria-label="Next track">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <audio class="ai-music-player__audio-{{ ai_gen_id }}" style="display: none;"></audio>
+  {% else %}
+    <div class="ai-music-player__empty-state-{{ ai_gen_id }}">
+      <p>Add tracks to your playlist to get started</p>
+    </div>
+  {% endif %}
+</music-player-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class MusicPlayer{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentTrackIndex = 0;
+        this.isPlaying = false;
+        this.tracks = [];
+      }
+
+      connectedCallback() {
+        this.audio = this.querySelector('.ai-music-player__audio-{{ ai_gen_id }}');
+        this.playButton = this.querySelector('.ai-music-player__button--play-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-music-player__button--prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-music-player__button--next-{{ ai_gen_id }}');
+        this.progressBar = this.querySelector('.ai-music-player__progress-bar-{{ ai_gen_id }}');
+        this.progressFill = this.querySelector('.ai-music-player__progress-fill-{{ ai_gen_id }}');
+        this.currentTimeDisplay = this.querySelector('.ai-music-player__current-time-{{ ai_gen_id }}');
+        this.totalTimeDisplay = this.querySelector('.ai-music-player__total-time-{{ ai_gen_id }}');
+        this.playIcon = this.querySelector('.ai-music-player__play-icon-{{ ai_gen_id }}');
+        this.pauseIcon = this.querySelector('.ai-music-player__pause-icon-{{ ai_gen_id }}');
+        this.trackElements = this.querySelectorAll('.ai-music-player__track-{{ ai_gen_id }}');
+
+        if (!this.audio) return;
+
+        this.loadTracks();
+        this.setupEventListeners();
+        this.updateButtonStates();
+      }
+
+      loadTracks() {
+        this.trackElements.forEach((trackEl, index) => {
+          const url = trackEl.dataset.trackUrl;
+          if (url) {
+            this.tracks.push({
+              url: url,
+              element: trackEl,
+              index: index
+            });
+          }
+        });
+
+        if (this.tracks.length > 0) {
+          this.loadTrack(0);
+        }
+      }
+
+      setupEventListeners() {
+        if (this.playButton) {
+          this.playButton.addEventListener('click', () => this.togglePlay());
+        }
+
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.previousTrack());
+        }
+
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.nextTrack());
+        }
+
+        if (this.progressBar) {
+          this.progressBar.addEventListener('click', (e) => this.seek(e));
+        }
+
+        this.trackElements.forEach((trackEl) => {
+          trackEl.addEventListener('click', () => {
+            const index = parseInt(trackEl.dataset.trackIndex);
+            this.loadTrack(index);
+            this.play();
+          });
+        });
+
+        if (this.audio) {
+          this.audio.addEventListener('timeupdate', () => this.updateProgress());
+          this.audio.addEventListener('loadedmetadata', () => this.updateDuration());
+          this.audio.addEventListener('ended', () => this.nextTrack());
+        }
+      }
+
+      loadTrack(index) {
+        if (index < 0 || index >= this.tracks.length) return;
+
+        this.currentTrackIndex = index;
+        const track = this.tracks[index];
+
+        if (this.audio && track.url) {
+          this.audio.src = track.url;
+        }
+
+        this.trackElements.forEach((el) => el.classList.remove('active'));
+        if (track.element) {
+          track.element.classList.add('active');
+        }
+
+        this.updateButtonStates();
+      }
+
+      togglePlay() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+
+      play() {
+        if (this.audio && this.tracks.length > 0) {
+          this.audio.play();
+          this.isPlaying = true;
+          if (this.playIcon) this.playIcon.style.display = 'none';
+          if (this.pauseIcon) this.pauseIcon.style.display = 'block';
+        }
+      }
+
+      pause() {
+        if (this.audio) {
+          this.audio.pause();
+          this.isPlaying = false;
+          if (this.playIcon) this.playIcon.style.display = 'block';
+          if (this.pauseIcon) this.pauseIcon.style.display = 'none';
+        }
+      }
+
+      previousTrack() {
+        const newIndex = this.currentTrackIndex - 1;
+        if (newIndex >= 0) {
+          this.loadTrack(newIndex);
+          if (this.isPlaying) {
+            this.play();
+          }
+        }
+      }
+
+      nextTrack() {
+        const newIndex = this.currentTrackIndex + 1;
+        if (newIndex < this.tracks.length) {
+          this.loadTrack(newIndex);
+          if (this.isPlaying) {
+            this.play();
+          }
+        } else {
+          this.pause();
+        }
+      }
+
+      seek(e) {
+        if (!this.audio || !this.progressBar) return;
+
+        const rect = this.progressBar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        this.audio.currentTime = percent * this.audio.duration;
+      }
+
+      updateProgress() {
+        if (!this.audio || !this.progressFill || !this.currentTimeDisplay) return;
+
+        const percent = (this.audio.currentTime / this.audio.duration) * 100;
+        this.progressFill.style.width = percent + '%';
+        this.currentTimeDisplay.textContent = this.formatTime(this.audio.currentTime);
+      }
+
+      updateDuration() {
+        if (!this.audio || !this.totalTimeDisplay) return;
+        this.totalTimeDisplay.textContent = this.formatTime(this.audio.duration);
+      }
+
+      updateButtonStates() {
+        if (this.prevButton) {
+          this.prevButton.disabled = this.currentTrackIndex === 0;
+        }
+        if (this.nextButton) {
+          this.nextButton.disabled = this.currentTrackIndex === this.tracks.length - 1;
+        }
+      }
+
+      formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return mins + ':' + (secs < 10 ? '0' : '') + secs;
+      }
+    }
+
+    customElements.define('music-player-{{ ai_gen_id }}', MusicPlayer{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Music player",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Player"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Tracks"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "A curated selection"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Track 1"
+    },
+    {
+      "type": "text",
+      "id": "track_1_name",
+      "label": "Track name",
+      "default": "Cosmic Journey"
+    },
+    {
+      "type": "text",
+      "id": "track_1_artist",
+      "label": "Artist name",
+      "default": "Inelia Records"
+    },
+    {
+      "type": "url",
+      "id": "track_1_url",
+      "label": "Audio file URL"
+    },
+    {
+      "type": "text",
+      "id": "track_1_duration",
+      "label": "Duration",
+      "default": "3:45"
+    },
+    {
+      "type": "header",
+      "content": "Track 2"
+    },
+    {
+      "type": "text",
+      "id": "track_2_name",
+      "label": "Track name",
+      "default": "Ethereal Dreams"
+    },
+    {
+      "type": "text",
+      "id": "track_2_artist",
+      "label": "Artist name",
+      "default": "Inelia Records"
+    },
+    {
+      "type": "url",
+      "id": "track_2_url",
+      "label": "Audio file URL"
+    },
+    {
+      "type": "text",
+      "id": "track_2_duration",
+      "label": "Duration",
+      "default": "4:12"
+    },
+    {
+      "type": "header",
+      "content": "Track 3"
+    },
+    {
+      "type": "text",
+      "id": "track_3_name",
+      "label": "Track name",
+      "default": "Awakening"
+    },
+    {
+      "type": "text",
+      "id": "track_3_artist",
+      "label": "Artist name",
+      "default": "Inelia Records"
+    },
+    {
+      "type": "url",
+      "id": "track_3_url",
+      "label": "Audio file URL"
+    },
+    {
+      "type": "text",
+      "id": "track_3_duration",
+      "label": "Duration",
+      "default": "5:20"
+    },
+    {
+      "type": "header",
+      "content": "Track 4"
+    },
+    {
+      "type": "text",
+      "id": "track_4_name",
+      "label": "Track name",
+      "default": "Stellar Waves"
+    },
+    {
+      "type": "text",
+      "id": "track_4_artist",
+      "label": "Artist name",
+      "default": "Inelia Records"
+    },
+    {
+      "type": "url",
+      "id": "track_4_url",
+      "label": "Audio file URL"
+    },
+    {
+      "type": "text",
+      "id": "track_4_duration",
+      "label": "Duration",
+      "default": "3:58"
+    },
+    {
+      "type": "header",
+      "content": "Track 5"
+    },
+    {
+      "type": "text",
+      "id": "track_5_name",
+      "label": "Track name",
+      "default": "Infinite Horizon"
+    },
+    {
+      "type": "text",
+      "id": "track_5_artist",
+      "label": "Artist name",
+      "default": "Inelia Records"
+    },
+    {
+      "type": "url",
+      "id": "track_5_url",
+      "label": "Audio file URL"
+    },
+    {
+      "type": "text",
+      "id": "track_5_duration",
+      "label": "Duration",
+      "default": "4:33"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#334fb4"
+    },
+    {
+      "type": "color",
+      "id": "hover_color",
+      "label": "Hover background",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Active track background",
+      "default": "#e8ebf7"
+    },
+    {
+      "type": "color",
+      "id": "progress_bg_color",
+      "label": "Progress bar background",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Music player"
+    }
+  ]
+}
+{% endschema %}

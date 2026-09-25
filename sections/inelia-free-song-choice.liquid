@@ -1,0 +1,134 @@
+{% comment %}
+  Inelia Records — "Choose Your Free Song" funnel step.
+  Instagram → Klaviyo signup → this page → Klaviyo tracking → artist
+  download page. Each card fires "Selected Free Single" (+ Free Song
+  Choice profile property) before redirecting — see free-song-card.liquid
+  and assets/free-song-funnel.js.
+{% endcomment %}
+
+<div id="inelia-free-song-choice" class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-artists__grid inelia-free-song__grid">
+    {%- for block in section.blocks -%}
+      {%- render 'free-song-card',
+        image: block.settings.image,
+        name: block.settings.name,
+        song_title: block.settings.song_title,
+        campaign: section.settings.campaign,
+        redirect_url: block.settings.download_page,
+        button_label: section.settings.button_label,
+        attributes: block.shopify_attributes
+      -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<script src="{{ 'free-song-funnel.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Free Song Choice",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Instagram Free Single"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Choose Your Free Song"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Pick an artist below and your free download starts right away."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Card button label",
+      "default": "Choose This Song"
+    },
+    {
+      "type": "text",
+      "id": "campaign",
+      "label": "Klaviyo Campaign property",
+      "info": "Sent as the Campaign property on every Selected Free Single / Downloaded Free Single event.",
+      "default": "Instagram Free Single"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "song",
+      "name": "Artist + Free Song",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Artist image (3:4)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Artist name",
+          "default": "Artist Name"
+        },
+        {
+          "type": "text",
+          "id": "song_title",
+          "label": "Free song title",
+          "default": "Song Title"
+        },
+        {
+          "type": "url",
+          "id": "download_page",
+          "label": "Artist's download page"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Free Song Choice",
+      "blocks": [
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" },
+        { "type": "song" }
+      ]
+    }
+  ]
+}
+{% endschema %}

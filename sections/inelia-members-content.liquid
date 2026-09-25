@@ -1,0 +1,229 @@
+{% comment %}
+  Inelia Records — Members Content
+  Organized content blocks for the BackStage members area. Place this
+  section on pages protected by the Appstle Membership app.
+
+  Each block is a clean card with a title, subtitle, rich text and an
+  optional custom Liquid/HTML area — paste Sky Pilot download embeds,
+  players, or any app snippet there and it renders inside the card.
+{% endcomment %}
+
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    <div class="inelia-divider"></div>
+  </div>
+
+  {%- if section.settings.intro != blank -%}
+    <div class="inelia-members__intro inelia-reveal">
+      {{ section.settings.intro }}
+    </div>
+  {%- endif -%}
+
+  {%- for block in section.blocks -%}
+    <div class="inelia-members__block inelia-reveal" {{ block.shopify_attributes }}>
+      {%- if block.settings.eyebrow != blank -%}
+        <span class="inelia-eyebrow" style="margin-bottom: 8px;">{{ block.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if block.settings.title != blank -%}
+        <h3>{{ block.settings.title }}</h3>
+      {%- endif -%}
+      {%- if block.settings.subtitle != blank -%}
+        <p class="inelia-members__sub">{{ block.settings.subtitle }}</p>
+      {%- endif -%}
+      {%- if block.settings.image != blank -%}
+        <div style="margin: 0 0 24px; border-radius: 2px; overflow: hidden;">
+          {{
+            block.settings.image
+            | image_url: width: 1600
+            | image_tag: loading: 'lazy', widths: '550, 800, 1200, 1600', sizes: '(min-width: 990px) 1020px, 100vw', alt: block.settings.title
+          }}
+        </div>
+      {%- endif -%}
+      {%- if block.settings.text != blank -%}
+        <div style="font-size: 15px; line-height: 1.7; color: #444; margin-bottom: 20px;">
+          {{ block.settings.text }}
+        </div>
+      {%- endif -%}
+      {%- comment -%}
+        Access control: signed-in members get the actual play/download
+        (embed + button). Logged-out visitors see the preview above, but the
+        player/download is replaced with a "log in to unlock" prompt.
+      {%- endcomment -%}
+      {%- if customer -%}
+        {%- if block.settings.embed != blank -%}
+          <div class="inelia-members__embed">
+            {{ block.settings.embed }}
+          </div>
+        {%- endif -%}
+        {%- liquid
+          # Sky Pilot's download URLs are scoped to the customer and their order,
+          # so no fixed link can be stored in the theme. The only address we can
+          # build ourselves is the member's own library root, which resolves the
+          # order from the logged-in customer. Tick "Link to downloads library"
+          # on a block to point its button there.
+          assign btn_href = block.settings.button_link
+          if block.settings.link_to_library
+            assign btn_href = '/apps/downloads/orders/' | append: customer.id
+          endif
+          if btn_href == blank
+            assign btn_href = '#'
+          endif
+        -%}
+        {%- if block.settings.button_label != blank -%}
+          <div style="margin-top: 8px;">
+            <a class="inelia-btn inelia-btn--gold" href="{{ btn_href }}">
+              {{- block.settings.button_label -}}
+            </a>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        {%- if block.settings.embed != blank or block.settings.button_label != blank -%}
+          <div class="inelia-members__locked">
+            <span class="inelia-members__locked-icon" aria-hidden="true">
+              {%- comment -%} stroke must inherit `color` from the wrapper, or the icon is invisible. {%- endcomment -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="11" width="14" height="9" rx="1"/>
+                <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+              </svg>
+            </span>
+            {%- if section.settings.locked_note != blank -%}
+              <p>{{ section.settings.locked_note }}</p>
+            {%- endif -%}
+            <a class="inelia-btn inelia-btn--gold" href="{{ routes.account_login_url }}">
+              {{- section.settings.locked_cta_label | default: 'Log In to Unlock' -}}
+            </a>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Members Content",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Behind the Velvet Curtain"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This Month's BackStage"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Welcome back. Everything new this month lives on this page — stream it, download it, keep it.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Locked preview (logged-out visitors)"
+    },
+    {
+      "type": "text",
+      "id": "locked_note",
+      "label": "Locked note",
+      "default": "Members only — log in to play and download."
+    },
+    {
+      "type": "text",
+      "id": "locked_cta_label",
+      "label": "Locked button label",
+      "default": "Log In to Unlock"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "ivory"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "New This Month"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Exclusive Singles"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Released weeks before their public appearance."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (optional)"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "liquid",
+          "id": "embed",
+          "label": "Embed (Sky Pilot / player code)",
+          "info": "Paste Sky Pilot download embeds or any player snippet here."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "checkbox",
+          "id": "link_to_library",
+          "label": "Link to downloads library",
+          "default": false,
+          "info": "Sends the member to their own Sky Pilot downloads. Overrides the button link below. Sky Pilot builds a separate address for every member, so this is the only download link the theme can generate."
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link",
+          "info": "Ignored when 'Link to downloads library' is ticked."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Inelia Members Content",
+      "blocks": [
+        { "type": "content", "settings": { "eyebrow": "New This Month", "title": "Exclusive Singles", "subtitle": "Released weeks before their public appearance." } },
+        { "type": "content", "settings": { "eyebrow": "Full Album", "title": "Album + Lyrics", "subtitle": "Pre-release album with the complete lyrics companion." } },
+        { "type": "content", "settings": { "eyebrow": "Lore", "title": "Behind the Music", "subtitle": "Backstories, cosmic myths and studio mysteries." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

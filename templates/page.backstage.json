@@ -1,0 +1,170 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "backstage_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "scrim_opacity": 55,
+        "height": "large",
+        "show_rings": true,
+        "content_position": "center",
+        "eyebrow": "Membership",
+        "heading": "BackStage Pass",
+        "show_divider": true,
+        "text": "Behind the velvet curtain — where music is born, secrets are whispered, and stories flow like golden vinyl grooves.",
+        "button_1_label": "Join for $14.99/month",
+        "button_1_link": "shopify://products/backstage-pass",
+        "button_2_label": "Member Log In",
+        "button_2_link": "/account/login",
+        "button_2_style": "gold-solid",
+        "button_2_hide_logged_in": true,
+        "button_1_hide_logged_in": true,
+        "button_member_label": "Enter BackStage",
+        "button_member_link": "/pages/backstage-members"
+      }
+    },
+    "backstage_exclusives": {
+      "type": "inelia-locked-teaser",
+      "blocks": {
+        "locked_singles": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive Singles",
+            "description": "At least 8 fresh tracks or remixes every month.",
+            "link": ""
+          }
+        },
+        "locked_albums": {
+          "type": "card",
+          "settings": {
+            "title": "Pre-Release Albums",
+            "description": "Hear the full album before the world catches on. Lyrics included.",
+            "link": ""
+          }
+        },
+        "locked_lore": {
+          "type": "card",
+          "settings": {
+            "title": "Lore & Backstories",
+            "description": "Hidden tales and behind-the-scenes mysteries of each artist.",
+            "link": ""
+          }
+        },
+        "locked_lyrics": {
+          "type": "card",
+          "settings": {
+            "title": "Lyrics Companion PDFs",
+            "description": "Every word, beautifully typeset.",
+            "link": ""
+          }
+        },
+        "locked_discount": {
+          "type": "card",
+          "settings": {
+            "title": "25% Merch Discount",
+            "description": "Merch, vinyl and physical editions.",
+            "link": ""
+          }
+        },
+        "locked_surprises": {
+          "type": "card",
+          "settings": {
+            "title": "Surprise Items",
+            "description": "If something new comes our way, we share it with you.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "locked_singles",
+        "locked_albums",
+        "locked_lore",
+        "locked_lyrics",
+        "locked_discount",
+        "locked_surprises"
+      ],
+      "settings": {
+        "eyebrow": "What's Inside",
+        "heading": "One Pass. Endless Wonder.",
+        "subheading": "A monthly invitation to step off the main stage and into the glow of the unknown.",
+        "member_link": "/pages/backstage-members",
+        "member_cta_label": "Enter BackStage",
+        "join_label": "Join BackStage",
+        "join_link": "shopify://products/backstage-pass",
+        "login_label": "Log In",
+        "background": "white"
+      }
+    },
+    "backstage_cta": {
+      "type": "inelia-backstage-cta",
+      "blocks": {
+        "benefit_belonging": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Feel like part of the label"
+          }
+        },
+        "benefit_singles": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Exclusive monthly singles"
+          }
+        },
+        "benefit_albums": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Pre-release albums + lyrics"
+          }
+        },
+        "benefit_lore": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Lore & backstories"
+          }
+        },
+        "benefit_discount": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "25% merch discount"
+          }
+        },
+        "benefit_surprises": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Surprise drops"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_belonging",
+        "benefit_singles",
+        "benefit_albums",
+        "benefit_lore",
+        "benefit_discount",
+        "benefit_surprises"
+      ],
+      "settings": {
+        "eyebrow": "Join the Label",
+        "heading": "This isn't just music.",
+        "text": "It's a secret society of rhythm, myth and melody. Your BackStage Pass is the key.",
+        "button_label": "Get Your Pass — $14.99/month",
+        "button_link": "shopify://products/backstage-pass",
+        "member_button_label": "Enter BackStage",
+        "member_button_link": "/pages/backstage-members"
+      }
+    }
+  },
+  "order": [
+    "backstage_hero",
+    "backstage_exclusives",
+    "backstage_cta"
+  ]
+}

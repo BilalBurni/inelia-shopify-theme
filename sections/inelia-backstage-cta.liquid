@@ -1,0 +1,139 @@
+{% comment %}
+  Inelia Records — BackStage Pass CTA
+  Deep-midnight membership invitation. Feels like joining the label,
+  not buying a subscription. Each block = one benefit line.
+{% endcomment %}
+
+<div class="inelia-backstage">
+  <svg class="inelia-hero__rings" viewBox="0 0 400 400" aria-hidden="true">
+    <circle cx="200" cy="200" r="190" fill="none" stroke="#C8A24E" stroke-width="0.5"/>
+    <circle cx="200" cy="200" r="150" fill="none" stroke="#C8A24E" stroke-width="0.5"/>
+    <circle cx="200" cy="200" r="110" fill="none" stroke="#C8A24E" stroke-width="0.5"/>
+    <circle cx="200" cy="200" r="70" fill="none" stroke="#C8A24E" stroke-width="0.5"/>
+  </svg>
+
+  <div class="inelia-backstage__inner inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.text != blank -%}
+      <p class="inelia-backstage__text">{{ section.settings.text }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="inelia-backstage__benefits">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.benefit }}</div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- liquid
+      # Signed-in visitors shouldn't be pushed at the buy page again. When a
+      # customer is logged in we swap the join button for a way into their
+      # content. This keys off login only, not active membership — the members
+      # page itself is Appstle-gated, so a logged-in non-member who lands there
+      # gets sent to join anyway.
+      if customer and section.settings.member_button_label != blank
+        assign cta_label = section.settings.member_button_label
+        assign cta_link = section.settings.member_button_link | default: '/pages/backstage-members'
+      else
+        assign cta_label = section.settings.button_label
+        assign cta_link = section.settings.button_link
+      endif
+    -%}
+    {%- if cta_label != blank and cta_link != blank -%}
+      <a class="inelia-btn inelia-btn--gold" href="{{ cta_link }}">
+        {{- cta_label -}}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia BackStage CTA",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Membership"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "BackStage Pass"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Not a subscription — a seat inside the label. Step past the catalog and into the studio with every artist you've discovered here."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label (logged out)",
+      "default": "Join BackStage Pass"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link (logged out)",
+      "info": "Where non-members go — usually the BackStage Pass product."
+    },
+    {
+      "type": "header",
+      "content": "Signed-in members"
+    },
+    {
+      "type": "text",
+      "id": "member_button_label",
+      "label": "Button label (logged in)",
+      "default": "Enter BackStage",
+      "info": "Shown to logged-in customers instead of the join button."
+    },
+    {
+      "type": "url",
+      "id": "member_button_link",
+      "label": "Button link (logged in)",
+      "info": "Where signed-in members go — usually the members area. Defaults to /pages/backstage-members."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "benefit",
+          "label": "Benefit",
+          "default": "Exclusive singles every month"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Inelia BackStage CTA",
+      "blocks": [
+        { "type": "benefit", "settings": { "benefit": "Exclusive monthly singles" } },
+        { "type": "benefit", "settings": { "benefit": "Pre-release albums" } },
+        { "type": "benefit", "settings": { "benefit": "Behind-the-scenes content" } },
+        { "type": "benefit", "settings": { "benefit": "Lyrics PDFs" } },
+        { "type": "benefit", "settings": { "benefit": "Lore & backstories" } },
+        { "type": "benefit", "settings": { "benefit": "25% merch discount" } },
+        { "type": "benefit", "settings": { "benefit": "Member-only releases" } },
+        { "type": "benefit", "settings": { "benefit": "Surprise drops" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,350 @@
+{% comment %}
+  Inelia Records — Hero
+  Cinematic panoramic hero representing the label. Transparent header
+  sits on top of it (handled by inelia.js + inelia-brand.css) when
+  height is Full or Large and this is the first section on the page.
+
+  Artist pages: image, eyebrow, heading and text are left blank in the
+  template and filled from the `artist` metaobject matched on the page
+  handle (/pages/roxy-vale → the artist whose handle is roxy-vale). A
+  value typed into the section always wins, so the homepage hero and any
+  other page keep working exactly as before.
+
+  Button 1 ("Listen Now" on artist pages): when its link is left blank
+  and we're on an artist page, it resolves dynamically to that artist's
+  newest release product (from the release metaobjects, matched by the
+  page handle), falling back to the artist's albums collection.
+
+  Button 2 ("Join BackStage Pass" / login): hidden for logged-in
+  customers when "Hide button 2 for logged-in customers" is enabled.
+{% endcomment %}
+
+{%- liquid
+  # ---- Which artist are we on? ----
+  # Two routes reach an artist: a metaobject template (the entry is the page
+  # itself) or a Shopify page whose handle matches an artist. Resolving to a
+  # handle here lets everything below work the same either way.
+  assign artist_handle = page.handle
+  if metaobject != blank
+    assign artist_handle = metaobject.system.handle
+  endif
+
+  # ---- Artist auto-fill ----
+  # Metaobject fields are only readable inside a `for` loop on this store
+  # (the lazy collection returns empty via .first / index access), so the
+  # values we need are captured into plain variables while looping.
+  assign artist_name = ''
+  assign artist_genre = ''
+  assign artist_tagline = ''
+  assign artist_photo = nil
+  if artist_handle != blank
+    for artist in shop.metaobjects.artist.values
+      if artist.system.handle == artist_handle
+        assign artist_name = artist.name
+        assign artist_genre = artist.genre
+        assign artist_tagline = artist.tagline
+        assign artist_photo = artist.photo.value
+        break
+      endif
+    endfor
+  endif
+
+  assign hero_image = section.settings.image
+  if hero_image == blank
+    assign hero_image = artist_photo
+  endif
+  assign hero_eyebrow = section.settings.eyebrow
+  if hero_eyebrow == blank
+    assign hero_eyebrow = artist_genre
+  endif
+  assign hero_heading = section.settings.heading
+  if hero_heading == blank
+    assign hero_heading = artist_name
+  endif
+  assign hero_text = section.settings.text
+  if hero_text == blank
+    assign hero_text = artist_tagline
+  endif
+
+  # ---- Button 1: dynamic album link for artist pages ----
+  assign button_1_href = section.settings.button_1_link
+  if button_1_href == blank and artist_handle != blank
+    # Find this artist's newest release (handle first — metaobject fields
+    # are only readable inside a for loop).
+    assign _newest_handle = ''
+    assign _newest_stamp = 0
+    for release in shop.metaobjects.release.values
+      if release.artist.value.system.handle == artist_handle
+        assign _stamp = release.release_date | date: '%Y%m%d' | times: 1
+        if _stamp >= _newest_stamp
+          assign _newest_stamp = _stamp
+          assign _newest_handle = release.system.handle
+        endif
+      endif
+    endfor
+    if _newest_handle != blank
+      for release in shop.metaobjects.release.values
+        if release.system.handle == _newest_handle
+          assign _prod = release.product.value
+          if _prod.url != blank
+            assign button_1_href = _prod.url
+          elsif release.sky_pilot_url != blank
+            assign button_1_href = release.sky_pilot_url
+          endif
+          break
+        endif
+      endfor
+    endif
+    # Fallback: the artist's albums collection (e.g. roxy-vale-albums).
+    if button_1_href == blank
+      assign _albums_handle = artist_handle | append: '-albums'
+      assign _albums = collections[_albums_handle]
+      if _albums.url != blank
+        assign button_1_href = _albums.url
+      endif
+    endif
+  endif
+  if button_1_href == blank
+    assign button_1_href = '#'
+  endif
+
+  # ---- Button 2: hide the join/login prompt for logged-in customers ----
+  assign show_button_2 = true
+  if section.settings.button_2_hide_logged_in and customer
+    assign show_button_2 = false
+  endif
+
+  # ---- Button 1: optionally hide for logged-in customers (e.g. "Join") ----
+  assign show_button_1 = true
+  if section.settings.button_1_hide_logged_in and customer
+    assign show_button_1 = false
+  endif
+
+  # ---- Member CTA: shown only to logged-in customers, so members get a
+  #      direct link to their content instead of a Join / Log In prompt. ----
+  assign show_member_cta = false
+  if customer and section.settings.button_member_label != blank
+    assign show_member_cta = true
+  endif
+-%}
+
+<div class="inelia-hero inelia-hero--{{ section.settings.height }}{% if section.settings.content_position == 'left' %} inelia-hero--content-left{% endif %}">
+  {%- if hero_image != blank -%}
+    <div class="inelia-hero__media">
+      {{
+        hero_image
+        | image_url: width: 3840
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '750, 1100, 1500, 2200, 3000, 3840',
+          sizes: '100vw',
+          alt: hero_image.alt
+      }}
+    </div>
+    <div class="inelia-hero__scrim" style="opacity: {{ section.settings.scrim_opacity | divided_by: 100.0 }};"></div>
+  {%- endif -%}
+
+  {%- if section.settings.show_rings -%}
+    <svg class="inelia-hero__rings" viewBox="0 0 400 400" aria-hidden="true">
+      <circle cx="200" cy="200" r="190" fill="none" stroke="#C8A24E" stroke-width="0.5" opacity="0.5"/>
+      <circle cx="200" cy="200" r="160" fill="none" stroke="#C8A24E" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="200" cy="200" r="130" fill="none" stroke="#C8A24E" stroke-width="0.5" opacity="0.35"/>
+      <circle cx="200" cy="200" r="100" fill="none" stroke="#C8A24E" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="200" cy="200" r="70" fill="none" stroke="#C8A24E" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="200" cy="200" r="40" fill="none" stroke="#C8A24E" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="200" cy="200" r="6" fill="#C8A24E" opacity="0.6"/>
+    </svg>
+  {%- endif -%}
+
+  <div class="inelia-hero__inner">
+    {%- if hero_eyebrow != blank -%}
+      <span class="inelia-hero__eyebrow">{{ hero_eyebrow }}</span>
+    {%- endif -%}
+    {%- if hero_heading != blank -%}
+      <h1>{{ hero_heading | newline_to_br }}</h1>
+    {%- endif -%}
+    {%- if section.settings.show_divider -%}
+      <div class="inelia-hero__divider"></div>
+    {%- endif -%}
+    {%- if hero_text != blank -%}
+      <p class="inelia-hero__text">{{ hero_text }}</p>
+    {%- endif -%}
+    {%- liquid
+      assign has_actions = false
+      if show_member_cta
+        assign has_actions = true
+      endif
+      if section.settings.button_1_label != blank and show_button_1
+        assign has_actions = true
+      endif
+      if section.settings.button_2_label != blank and show_button_2
+        assign has_actions = true
+      endif
+    -%}
+    {%- if has_actions -%}
+      <div class="inelia-hero__actions">
+        {%- if show_member_cta -%}
+          <a class="inelia-btn inelia-btn--gold-solid" href="{{ section.settings.button_member_link | default: '#' }}">
+            {{- section.settings.button_member_label -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_1_label != blank and show_button_1 -%}
+          <a class="inelia-btn inelia-btn--gold" href="{{ button_1_href }}">
+            {{- section.settings.button_1_label -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_2_label != blank and show_button_2 -%}
+          <a class="inelia-btn inelia-btn--{{ section.settings.button_2_style }}" href="{{ section.settings.button_2_link | default: '#' }}">
+            {{- section.settings.button_2_label -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Cinematic panoramic landscape. On an artist page, leave empty to use that artist's Photo. Falls back to a deep midnight gradient with gold rings if neither is set."
+    },
+    {
+      "type": "range",
+      "id": "scrim_opacity",
+      "label": "Image overlay strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "full", "label": "Full (homepage)" },
+        { "value": "large", "label": "Large" },
+        { "value": "compact", "label": "Compact (interior pages)" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rings",
+      "label": "Show gold rings emblem",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "left", "label": "Left (editorial)" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "On an artist page, leave empty to use that artist's Genre."
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Each new line = a line break. Wrap a word in <em> tags for the gold italic accent, e.g. <em>inspires,</em> — on an artist page, leave empty to use that artist's Name.",
+      "default": "Music that <em>inspires,</em>\nempowers and\nexpands awareness."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show gold divider line",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "info": "On an artist page, leave empty to use that artist's Tagline.",
+      "default": "Eight artists. Eight musical worlds. One record label."
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Button 1 label",
+      "default": "Start Exploring"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Button 1 link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Button 2 label",
+      "default": "Join BackStage Pass"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Button 2 link"
+    },
+    {
+      "type": "select",
+      "id": "button_2_style",
+      "label": "Button 2 style",
+      "options": [
+        { "value": "gold-solid", "label": "Solid gold" },
+        { "value": "ghost", "label": "Ghost outline" }
+      ],
+      "default": "gold-solid"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_2_hide_logged_in",
+      "label": "Hide button 2 for logged-in customers",
+      "info": "Hides the Join / Log In prompt once a customer is signed in.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_1_hide_logged_in",
+      "label": "Hide button 1 for logged-in customers",
+      "info": "Hides the Join prompt for signed-in members (use with the member button below).",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Member button (logged-in only)"
+    },
+    {
+      "type": "text",
+      "id": "button_member_label",
+      "label": "Member button label",
+      "info": "Shown only to logged-in customers — e.g. a link to their BackStage content."
+    },
+    {
+      "type": "url",
+      "id": "button_member_link",
+      "label": "Member button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia Hero"
+    }
+  ]
+}
+{% endschema %}

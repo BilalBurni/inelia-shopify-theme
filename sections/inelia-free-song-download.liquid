@@ -1,0 +1,137 @@
+{% comment %}
+  Inelia Records — artist "free song" download page.
+  One of these per artist (page.free-<artist>.json). No cart, checkout,
+  coupon, payment, account creation or second signup — just the file.
+  Fires the Klaviyo "Downloaded Free Single" event on click via
+  assets/free-song-funnel.js.
+{% endcomment %}
+
+{%- liquid
+  assign message = section.settings.custom_message
+  if message == blank
+    assign message = 'Thanks for choosing ' | append: section.settings.artist_name | append: ' — your free download is ready below.'
+  endif
+-%}
+
+<div id="inelia-free-song-download" class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-free-song-download">
+    <div class="inelia-free-song-download__img inelia-artist-card__img inelia-reveal">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 900
+          | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 990px) 40vw, 80vw', alt: section.settings.artist_name
+        }}
+      {%- else -%}
+        <span class="inelia-artist-card__placeholder" aria-hidden="true">
+          <svg viewBox="0 0 200 200" fill="none">
+            <circle cx="100" cy="100" r="90" stroke="#C8A24E" stroke-width="0.8"/>
+            <circle cx="100" cy="100" r="60" stroke="#C8A24E" stroke-width="0.8"/>
+            <circle cx="100" cy="100" r="30" stroke="#C8A24E" stroke-width="0.8"/>
+          </svg>
+        </span>
+      {%- endif -%}
+    </div>
+
+    <div class="inelia-free-song-download__body inelia-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1>{{ section.settings.artist_name }}</h1>
+      {%- if section.settings.song_title != blank -%}
+        <p class="inelia-free-song-download__song">{{ section.settings.song_title }}</p>
+      {%- endif -%}
+      <p class="inelia-free-song-download__message">{{ message }}</p>
+
+      {%- if section.settings.mp3_url != blank -%}
+        <a
+          class="inelia-btn inelia-btn--gold-solid"
+          href="{{ section.settings.mp3_url }}"
+          target="_blank"
+          rel="noopener"
+          data-free-song-download
+          data-free-song-artist="{{ section.settings.artist_name | escape }}"
+          data-free-song-title="{{ section.settings.song_title | escape }}"
+          data-free-song-campaign="{{ section.settings.campaign | escape }}"
+        >{{ section.settings.button_label | default: 'Download Your Song' }}</a>
+      {%- else -%}
+        <span class="inelia-btn inelia-btn--gold-solid" aria-disabled="true" style="opacity:0.5;cursor:not-allowed;">{{ section.settings.button_label | default: 'Download Your Song' }}</span>
+        <p class="inelia-free-song-download__pending">(MP3 link not set yet — add it in the theme editor.)</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'free-song-funnel.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Free Song Download",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Artist image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Your Free Song"
+    },
+    {
+      "type": "text",
+      "id": "artist_name",
+      "label": "Artist name",
+      "default": "Artist Name"
+    },
+    {
+      "type": "text",
+      "id": "song_title",
+      "label": "Song title",
+      "default": "Song Title"
+    },
+    {
+      "type": "text",
+      "id": "custom_message",
+      "label": "Custom confirmation message",
+      "info": "Leave blank to auto-generate from the artist name."
+    },
+    {
+      "type": "url",
+      "id": "mp3_url",
+      "label": "MP3 file link",
+      "info": "Upload the MP3 in Shopify admin under Content > Files, then paste its link here."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Download button label",
+      "default": "Download Your Song"
+    },
+    {
+      "type": "text",
+      "id": "campaign",
+      "label": "Klaviyo Campaign property",
+      "default": "Instagram Free Single"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Free Song Download"
+    }
+  ]
+}
+{% endschema %}

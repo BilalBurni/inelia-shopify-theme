@@ -1,0 +1,68 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "featured_image",
+        "title",
+        "content"
+      ],
+      "settings": {}
+    },
+    "members_content": {
+      "type": "inelia-members-content",
+      "blocks": {
+        "content_downloads": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Downloads",
+            "title": "Your Files",
+            "subtitle": "Stream or download — they're yours to keep.",
+            "text": "<p>Placeholder — paste the Sky Pilot embed for this release in the block's Embed field.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "content_downloads"
+      ],
+      "settings": {
+        "eyebrow": "BackStage Pass",
+        "heading": "Member Content",
+        "intro": "",
+        "background": "ivory"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "members_content"
+  ]
+}

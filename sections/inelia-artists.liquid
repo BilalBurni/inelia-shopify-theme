@@ -1,0 +1,232 @@
+{% comment %}
+  Inelia Records — Meet the Artists
+  Editorial artist cards, either read from the `artist` metaobjects
+  (the default — add an entry and it appears here) or hand-picked as
+  blocks.
+
+  On an artist page the artist whose page we are on is skipped, so the
+  same section doubles as the "Related Artists" row without any per-page
+  setup.
+
+  Notes on metaobject access (verified on this store, see also
+  inelia-new-releases):
+  - Metaobject fields are only readable INSIDE a `{% for %}` loop over
+    `shop.metaobjects.artist.values` — `.first`, index access and the
+    `sort` filter return empty. So we sort manually and render via a
+    nested lookup loop.
+  - Sort order is padded into a fixed-width string key, otherwise "10"
+    would sort before "2".
+{% endcomment %}
+
+{%- liquid
+  assign use_blocks = false
+  if section.settings.source == 'blocks'
+    assign use_blocks = true
+  endif
+
+  # The artist we're currently reading about, so a Related Artists row can
+  # leave them out. Blank on the homepage, which is what we want there.
+  assign current_handle = page.handle
+  if metaobject != blank
+    assign current_handle = metaobject.system.handle
+  endif
+
+  # Pass 1 — build sortable "NNNN~handle" keys (fields work in-loop).
+  # Entries with no sort order fall to the end rather than jumping the queue.
+  assign keys = ''
+  assign artist_total = 0
+  unless use_blocks
+    for artist in shop.metaobjects.artist.values
+      assign so = artist.sort_order
+      if so == blank
+        assign so = 999
+      endif
+      assign entry = so | plus: 1000 | append: '~' | append: artist.system.handle
+      if forloop.first
+        assign keys = entry
+      else
+        assign keys = keys | append: ',' | append: entry
+      endif
+    endfor
+    assign ordered = keys | split: ','
+    assign ordered = ordered | sort
+    assign artist_total = ordered.size
+  endunless
+
+  # 0 means "no limit" — the homepage shows everyone, a related row shows 4.
+  assign max_artists = section.settings.limit
+  if max_artists == 0
+    assign max_artists = 99
+  endif
+-%}
+
+<div id="inelia-artists" class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-artists__grid">
+    {%- if use_blocks -%}
+      {%- for block in section.blocks -%}
+        {%- render 'inelia-artist-card',
+          image: block.settings.image,
+          name: block.settings.name,
+          description: block.settings.description,
+          link: block.settings.link,
+          link_label: section.settings.link_label,
+          attributes: block.shopify_attributes
+        -%}
+      {%- endfor -%}
+    {%- elsif artist_total > 0 -%}
+      {%- assign shown = 0 -%}
+      {%- for key in ordered -%}
+        {%- if shown >= max_artists -%}{%- break -%}{%- endif -%}
+        {%- assign khandle = key | split: '~' | last -%}
+        {%- comment -%}
+          Skip the artist whose page we are on — a "Related Artists" row
+          that lists the artist you are already reading about is noise.
+        {%- endcomment -%}
+        {%- unless khandle == current_handle -%}
+          {%- for artist in shop.metaobjects.artist.values -%}
+            {%- if artist.system.handle == khandle -%}
+              {%- liquid
+                assign shown = shown | plus: 1
+                # Once the Artist definition has web pages turned on, each
+                # entry carries its own url. Until then, the Shopify page of
+                # the same handle is where the artist lives.
+                assign a_url = artist.system.url
+                if a_url == blank
+                  assign a_url = '/pages/' | append: khandle
+                endif
+              -%}
+              {%- render 'inelia-artist-card',
+                image: artist.photo.value,
+                name: artist.name,
+                description: artist.tagline,
+                link: a_url,
+                link_label: section.settings.link_label
+              -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Artists",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Artists shown",
+      "info": "Automatic reads the Artist metaobjects in Sort order and skips the artist whose page you are on — so the same section works as both the homepage grid and a Related Artists row.",
+      "options": [
+        { "value": "metaobject", "label": "Automatic (all artists)" },
+        { "value": "blocks", "label": "Hand-picked (blocks below)" }
+      ],
+      "default": "blocks"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Maximum artists",
+      "info": "0 shows every artist. Use 4 for a Related Artists row.",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Begin Here"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Meet the Artists"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Eight Artists. Eight Musical Worlds. One Record Label."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Card link label",
+      "default": "Explore Artist"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "artist",
+      "name": "Artist",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Only used when \"Artists shown\" is set to Hand-picked."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Artist image (3:4)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Artist name",
+          "default": "Artist Name"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "One-line description",
+          "default": "A short one-line description of this artist's world."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Artist page link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Inelia Artists",
+      "settings": {
+        "source": "metaobject",
+        "limit": 0
+      }
+    }
+  ]
+}
+{% endschema %}

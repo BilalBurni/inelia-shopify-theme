@@ -1,0 +1,121 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "free_song_choice": {
+      "type": "inelia-free-song-choice",
+      "blocks": {
+        "song_roxy_vale": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Roxy_Vale_2.png",
+            "name": "Roxy Vale",
+            "song_title": "Gravity Doesn't Own Me",
+            "download_page": "/pages/free-roxy-vale"
+          }
+        },
+        "song_glass_daisy": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Glass_Daisy_singer.jpg",
+            "name": "Glass Daisy",
+            "song_title": "Out of Phase",
+            "download_page": "/pages/free-glass-daisy"
+          }
+        },
+        "song_iron_cedar": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Iron_Cedar.jpg",
+            "name": "Iron Cedar",
+            "song_title": "Keep Your Rhythm",
+            "download_page": "/pages/free-iron-cedar"
+          }
+        },
+        "song_jazzy_stevens": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Jazzy_Stevens.png",
+            "name": "Jazzy Stevens",
+            "song_title": "Glow Bright Like You Mean It",
+            "download_page": "/pages/free-jazzy-stevens"
+          }
+        },
+        "song_leo_mar": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Leo_Mar.png",
+            "name": "Leo Mar",
+            "song_title": "Raíces en la Pista",
+            "download_page": "/pages/free-leo-mar"
+          }
+        },
+        "song_luc_lake": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Luc_Lake.png",
+            "name": "Luc Lake",
+            "song_title": "Silent Giants",
+            "download_page": "/pages/free-luc-lake"
+          }
+        },
+        "song_north_wolf": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/North_Wolf.png",
+            "name": "North Wolf",
+            "song_title": "Good Medicine",
+            "download_page": "/pages/free-north-wolf"
+          }
+        },
+        "song_alicia_avila": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/Alicia_Avila.png",
+            "name": "Alicia Ávila",
+            "song_title": "Donde Canta el Agua",
+            "download_page": "/pages/free-alicia-avila"
+          }
+        },
+        "song_wade_mccoy": {
+          "type": "song",
+          "settings": {
+            "image": "shopify://shop_images/wade_5.png",
+            "name": "Wade McCoy",
+            "song_title": "This Is Our Song",
+            "download_page": "/pages/free-wade-mccoy"
+          }
+        }
+      },
+      "block_order": [
+        "song_roxy_vale",
+        "song_glass_daisy",
+        "song_iron_cedar",
+        "song_jazzy_stevens",
+        "song_leo_mar",
+        "song_luc_lake",
+        "song_north_wolf",
+        "song_alicia_avila",
+        "song_wade_mccoy"
+      ],
+      "settings": {
+        "eyebrow": "Instagram Free Single",
+        "heading": "Choose Your Free Song",
+        "subheading": "Pick an artist below and your free download starts right away.",
+        "button_label": "Choose This Song",
+        "campaign": "Instagram Free Single",
+        "background": "white"
+      }
+    }
+  },
+  "order": [
+    "free_song_choice"
+  ]
+}

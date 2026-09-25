@@ -1,0 +1,205 @@
+{% comment %}
+  Inelia Records — Product Showcase
+  Editorial product grid pulled from a collection. Used for
+  Best Sellers and Merchandise on the homepage, and for album /
+  single / merch rows on artist pages.
+
+  Artist pages: leaving the collection empty falls back to that artist's
+  albums collection, named "<page handle>-albums" (e.g. /pages/roxy-vale
+  → roxy-vale-albums). The Merchandise row keeps its own collection set,
+  so it is unaffected.
+
+  Text settings accept an {artist} token, replaced with the current
+  artist's name — e.g. "All {artist} Music".
+{% endcomment %}
+
+{%- liquid
+  # The artist whose page we're on, for the albums fallback and the {artist}
+  # token. Metaobject fields are only readable inside a `for` loop on this
+  # store, so the name is captured while looping.
+  assign artist_handle = page.handle
+  if metaobject != blank
+    assign artist_handle = metaobject.system.handle
+  endif
+
+  assign artist_name = ''
+  if artist_handle != blank
+    for artist in shop.metaobjects.artist.values
+      if artist.system.handle == artist_handle
+        assign artist_name = artist.name
+        break
+      endif
+    endfor
+  endif
+
+  # Explicit collection wins. Left empty on an artist page, fall back to
+  # that artist's albums collection by naming convention — the same one
+  # the hero's "Listen Now" button already relies on.
+  assign showcase_collection = section.settings.collection
+  if showcase_collection == blank and artist_name != blank
+    assign _albums_handle = artist_handle | append: '-albums'
+    assign showcase_collection = collections[_albums_handle]
+  endif
+
+  # A section with nothing to show is worse than no section at all: a lone
+  # "Albums" heading over an empty row, or the demo "Product title / $0" cards,
+  # both read as broken on a live store. So on the storefront we render nothing
+  # unless the collection exists AND holds at least one product. In the theme
+  # editor we still draw the placeholders, otherwise the section would be
+  # invisible and impossible to configure.
+  assign showcase_count = 0
+  if showcase_collection != blank
+    assign showcase_count = showcase_collection.products.size
+  endif
+  assign showcase_render = false
+  if showcase_count > 0 or request.design_mode
+    assign showcase_render = true
+  endif
+
+  assign showcase_eyebrow = section.settings.eyebrow | replace: '{artist}', artist_name
+  assign showcase_heading = section.settings.heading | replace: '{artist}', artist_name
+  assign showcase_subheading = section.settings.subheading | replace: '{artist}', artist_name
+  assign showcase_view_all = section.settings.view_all_label | replace: '{artist}', artist_name
+-%}
+
+{%- if showcase_render -%}
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if showcase_eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ showcase_eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ showcase_heading }}</h2>
+    {%- if showcase_subheading != blank -%}
+      <p>{{ showcase_subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-products__grid inelia-reveal">
+    {%- if showcase_count > 0 -%}
+      {%- for product in showcase_collection.products limit: section.settings.products_to_show -%}
+        <a class="inelia-product-card" href="{{ product.url }}">
+          <div class="inelia-product-card__art">
+            {%- if product.featured_image != blank -%}
+              {{
+                product.featured_image
+                | image_url: width: 900
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '360, 540, 720, 900',
+                  sizes: '(min-width: 990px) 25vw, 50vw',
+                  alt: product.title
+              }}
+            {%- endif -%}
+          </div>
+          <h3>{{ product.title }}</h3>
+          {%- if section.settings.show_vendor and product.vendor != blank -%}
+            <p>{{ product.vendor }}</p>
+          {%- endif -%}
+          <span class="inelia-price">
+            {%- if product.price_varies -%}
+              {{ 'products.product.price.from_price_html' | t: price: product.price_min | money }}
+            {%- else -%}
+              {{ product.price | money }}
+            {%- endif -%}
+          </span>
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Theme editor only — never reaches the storefront. {%- endcomment -%}
+      {%- for i in (1..section.settings.products_to_show) -%}
+        <div class="inelia-product-card">
+          <div class="inelia-product-card__art"></div>
+          <h3>Product title</h3>
+          <p>Pick a collection to fill this row</p>
+          <span class="inelia-price">$0</span>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_view_all and showcase_count > 0 -%}
+    <div class="inelia-products__view-all inelia-reveal">
+      <a class="inelia-btn inelia-btn--dark" href="{{ showcase_collection.url }}">
+        {{- showcase_view_all -}}
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Inelia Product Showcase",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Start Where Listeners Begin"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "On an artist page, leave empty to use that artist's albums collection (named \"<page handle>-albums\"). The section hides itself if the collection is empty or missing."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show artist / vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view-all button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View-all label",
+      "info": "{artist} is replaced with the artist's name, e.g. \"All {artist} Music\".",
+      "default": "View All"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "ivory"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia Product Showcase"
+    }
+  ]
+}
+{% endschema %}

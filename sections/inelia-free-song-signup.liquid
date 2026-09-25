@@ -1,0 +1,212 @@
+{% comment %}
+  Inelia Records — "Get Your Free Song" signup step.
+  Instagram → this page → Klaviyo double opt-in → Choose Your Free Song.
+
+  This uses a native HTML form posted directly to Klaviyo's public
+  Client API (https://developers.klaviyo.com/en/reference/create_client_subscription)
+  instead of Klaviyo's own embedded form widget. The widget
+  (static.klaviyo.com's onsite form renderer) was getting silently
+  blocked by default tracking-protection in several browsers (Chrome
+  Incognito, Edge, Safari), leaving visitors with a blank box and no
+  way to sign up. The Client API call below uses only the account's
+  public Company ID — never a private API key — so it's safe to call
+  from the browser, and it's the same request Klaviyo's own widget
+  would have made under the hood.
+
+  The list is double opt-in, so a successful call here just queues
+  Klaviyo's confirmation email — it does not fully subscribe anyone by
+  itself.
+{% endcomment %}
+
+<div id="inelia-free-song-signup" class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-free-song-signup">
+    <div class="inelia-section-head inelia-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1>{{ section.settings.heading }}</h1>
+      {%- if section.settings.subheading != blank -%}
+        <p>{{ section.settings.subheading }}</p>
+      {%- endif -%}
+      <div class="inelia-divider"></div>
+    </div>
+
+    <div class="inelia-free-song-signup__form inelia-reveal">
+      <form
+        novalidate
+        data-free-song-signup-native
+        data-klaviyo-company-id="{{ section.settings.klaviyo_company_id }}"
+        data-klaviyo-list-id="{{ section.settings.klaviyo_list_id }}"
+      >
+        <input
+          type="email"
+          name="email"
+          class="inelia-free-song-signup__input"
+          placeholder="Email"
+          aria-label="Email"
+          autocomplete="email"
+          required
+        >
+        <input
+          type="text"
+          name="first_name"
+          class="inelia-free-song-signup__input"
+          placeholder="First Name (optional)"
+          aria-label="First Name"
+          autocomplete="given-name"
+        >
+        <button type="submit" class="inelia-btn inelia-btn--gold-solid inelia-free-song-signup__submit">
+          {{ section.settings.button_label | default: 'Get My Free Song' }}
+        </button>
+        <p class="inelia-free-song-signup__error" data-free-song-signup-error hidden></p>
+      </form>
+
+      <div class="inelia-free-song-signup__success" data-free-song-signup-success hidden>
+        <h2>Check your email</h2>
+        <p>We've sent you a confirmation email. Click the link in that email to confirm your subscription and choose your free song.</p>
+      </div>
+
+      {%- if section.settings.consent_text != blank -%}
+        <p class="inelia-free-song-signup__consent">{{ section.settings.consent_text }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var section = document.currentScript.previousElementSibling;
+    var form = section && section.querySelector('[data-free-song-signup-native]');
+    if (!form) return;
+
+    var errorEl = form.querySelector('[data-free-song-signup-error]');
+    var successEl = section.querySelector('[data-free-song-signup-success]');
+    var companyId = form.getAttribute('data-klaviyo-company-id');
+    var listId = form.getAttribute('data-klaviyo-list-id');
+
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      errorEl.hidden = true;
+
+      var email = form.elements.email.value.trim();
+      var firstName = form.elements.first_name.value.trim();
+      if (!email) return;
+
+      var submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+
+      var profileAttributes = { email: email };
+      if (firstName) profileAttributes.first_name = firstName;
+
+      var body = {
+        data: {
+          type: 'subscription',
+          attributes: {
+            profile: {
+              data: {
+                type: 'profile',
+                attributes: profileAttributes
+              }
+            },
+            custom_source: 'Instagram Free Single Signup Page'
+          },
+          relationships: {
+            list: {
+              data: { type: 'list', id: listId }
+            }
+          }
+        }
+      };
+
+      fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(companyId), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'revision': '2024-10-15'
+        },
+        body: JSON.stringify(body)
+      })
+        .then(function (res) {
+          if (!res.ok && res.status !== 202) throw new Error('Klaviyo subscribe failed: ' + res.status);
+          form.hidden = true;
+          successEl.hidden = false;
+        })
+        .catch(function () {
+          submitBtn.disabled = false;
+          errorEl.textContent = "Something went wrong — please try again in a moment.";
+          errorEl.hidden = false;
+        });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Free Song Signup",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Instagram Free Single"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get a Free Song"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sign up below and pick a free single from one of our 9 artists."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get My Free Song"
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_company_id",
+      "label": "Klaviyo public Company ID",
+      "info": "The public site ID from the onsite script tag, e.g. SdTEmr. Not a private key — safe to expose.",
+      "default": "SdTEmr"
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_list_id",
+      "label": "Klaviyo list ID",
+      "info": "The list this form subscribes to, e.g. SdPzWY for Instagram Free Single.",
+      "default": "SdPzWY"
+    },
+    {
+      "type": "text",
+      "id": "consent_text",
+      "label": "Consent disclosure",
+      "info": "Shown under the form.",
+      "default": "By signing up, you agree to receive marketing emails from Inelia Records. Unsubscribe anytime."
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Free Song Signup"
+    }
+  ]
+}
+{% endschema %}

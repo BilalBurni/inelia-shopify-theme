@@ -1,0 +1,102 @@
+{% comment %}
+  Inelia Records — Browse Music
+  Quiet chip navigation into collections: album, single, collection,
+  mood, theme, genre, artist. Each block = one chip.
+{% endcomment %}
+
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-chips inelia-reveal">
+    {%- for block in section.blocks -%}
+      <a
+        href="{{ block.settings.link | default: '#' }}"
+        class="inelia-chip"
+        {{ block.shopify_attributes }}
+      >
+        {{- block.settings.label -}}
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Browse Music",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Now That You Know Them"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Browse Music"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Find your way in by album, artist, mood, or theme."
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Chip",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Albums"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Inelia Browse Music",
+      "blocks": [
+        { "type": "chip", "settings": { "label": "Albums" } },
+        { "type": "chip", "settings": { "label": "Singles" } },
+        { "type": "chip", "settings": { "label": "Collections" } },
+        { "type": "chip", "settings": { "label": "Genre" } },
+        { "type": "chip", "settings": { "label": "Mood" } },
+        { "type": "chip", "settings": { "label": "Theme" } },
+        { "type": "chip", "settings": { "label": "Artist" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

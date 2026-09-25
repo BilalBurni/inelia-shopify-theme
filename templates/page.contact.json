@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "contact_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "scrim_opacity": 55,
+        "height": "compact",
+        "show_rings": true,
+        "content_position": "center",
+        "eyebrow": "Get in Touch",
+        "heading": "Contact",
+        "show_divider": true,
+        "text": "Questions, requests, or just want to say hello — we read everything.",
+        "button_1_label": "",
+        "button_2_label": ""
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "single_app_grid_gmAQU7": {
+      "type": "single-app-grid",
+      "blocks": {
+        "powerful_form_builder_app_block_eEd7bz": {
+          "type": "shopify://apps/powerful-form-builder/blocks/app-block/e4bcb1eb-35b2-42e6-bc37-bfe0e1542c9d",
+          "settings": {
+            "shortcode": ""
+          }
+        }
+      },
+      "block_order": [
+        "powerful_form_builder_app_block_eEd7bz"
+      ],
+      "name": "App Grid",
+      "settings": {
+        "include_margins": true,
+        "column_count": 4,
+        "block_widths": ""
+      }
+    }
+  },
+  "order": [
+    "contact_hero",
+    "main",
+    "single_app_grid_gmAQU7"
+  ]
+}

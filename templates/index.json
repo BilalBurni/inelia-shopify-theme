@@ -1,0 +1,693 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "inelia_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "image": "shopify://shop_images/hero_image.png",
+        "scrim_opacity": 40,
+        "height": "full",
+        "show_rings": false,
+        "content_position": "left",
+        "eyebrow": "",
+        "heading": "Music that <em>inspires,</em>\nempowers and\nexpands awareness.",
+        "show_divider": true,
+        "text": "Eight artists. Eight musical worlds. One record label.",
+        "button_1_label": "Start Exploring",
+        "button_1_link": "/#inelia-artists",
+        "button_2_label": "Join BackStage Pass",
+        "button_2_link": "shopify://products/backstage-pass",
+        "button_2_style": "gold-solid",
+        "button_2_hide_logged_in": true,
+        "button_1_hide_logged_in": false,
+        "button_member_label": "",
+        "button_member_link": ""
+      }
+    },
+    "inelia_artists": {
+      "type": "inelia-artists",
+      "settings": {
+        "source": "metaobject",
+        "limit": 0,
+        "eyebrow": "Begin Here",
+        "heading": "Meet the Voices",
+        "subheading": "Eight Voices. Eight Musical Worlds. One Record Label.",
+        "link_label": "Explore Voice",
+        "background": "white"
+      }
+    },
+    "inelia_featured_release": {
+      "type": "inelia-featured-release",
+      "settings": {
+        "artist_handle": "",
+        "eyebrow": "Just Released",
+        "heading": "Featured Release",
+        "product": "flare-in-the-sky",
+        "artist": "Seven Artists. One Ignition.",
+        "title": "",
+        "description": "This is not a compilation — it's a convergence. Seven artists, seven genres, each track capturing the moment something ignites: a turning point, a refusal to stay small, a flare that refuses to be unseen.",
+        "listen_label": "Listen",
+        "listen_link": "",
+        "album_label": "Explore Album",
+        "album_link": "",
+        "background": "ivory"
+      }
+    },
+    "inelia_new_releases": {
+      "type": "inelia-new-releases",
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "subheading": "The newest releases across every artist on the label.",
+        "releases_to_show": 4,
+        "show_view_all": true,
+        "view_all_label": "View All Music",
+        "view_all_link": "shopify://collections/all",
+        "background": "white"
+      }
+    },
+    "inelia_find_your_sound": {
+      "type": "inelia-find-your-sound",
+      "blocks": {
+        "fys_driving_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Hope",
+            "title": "Roxy Vale — Still I Am",
+            "description": "Soul rock for the first hour of a long drive — steady, warm and sure of itself.",
+            "link": "shopify://collections/roxy-vale-albums"
+          }
+        },
+        "fys_driving_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Wonder",
+            "title": "Flare In The Sky",
+            "description": "Seven artists, seven genres, one ignition — a wide, cinematic record built for long roads and open windows.",
+            "link": "shopify://products/flare-in-the-sky"
+          }
+        },
+        "fys_driving_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Adventure",
+            "title": "Iron Cedar — Return To The Seeds",
+            "description": "Native rock with the pull of distance — drums that suit an unfamiliar road.",
+            "link": "shopify://products/return-to-the-seeds"
+          }
+        },
+        "fys_driving_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Peace",
+            "title": "Wade McCoy — Americana",
+            "description": "Gravel-voiced storytelling, unhurried. For drives with nowhere to be.",
+            "link": "shopify://collections/wade-mccoy-albums"
+          }
+        },
+        "fys_driving_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Reflection",
+            "title": "Alicia Ávila — Nueva Canción",
+            "description": "Andean folk that turns the windscreen into a window on memory.",
+            "link": "shopify://products/aun-estoy-alicia-avila"
+          }
+        },
+        "fys_driving_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Driving",
+            "mood": "Energy",
+            "title": "Leo Mar — Urban Latin",
+            "description": "Urban Latin rhythm with the windows down and the city ahead.",
+            "link": "shopify://collections/leo-mar-albums"
+          }
+        },
+        "fys_working_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Hope",
+            "title": "Roxy Vale — Still I Am",
+            "description": "Soul rock that keeps its chin up through a long afternoon.",
+            "link": "shopify://collections/roxy-vale-albums"
+          }
+        },
+        "fys_working_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Wonder",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Dream pop that hums under your thoughts without ever interrupting them.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_working_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Adventure",
+            "title": "Iron Cedar — Return To The Seeds",
+            "description": "Native rock with the pull of distance and the open road.",
+            "link": "shopify://products/return-to-the-seeds"
+          }
+        },
+        "fys_working_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Peace",
+            "title": "Wade McCoy — Americana",
+            "description": "Quiet Americana for deep work — warm, weathered and never in a hurry.",
+            "link": "shopify://collections/wade-mccoy-albums"
+          }
+        },
+        "fys_working_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Reflection",
+            "title": "Alicia Ávila — Nueva Canción",
+            "description": "Folk melodies in two languages, for work that needs a softer room.",
+            "link": "shopify://products/aun-estoy-alicia-avila"
+          }
+        },
+        "fys_working_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Working",
+            "mood": "Energy",
+            "title": "Jazzy Stevens — Synth Pop Energy",
+            "description": "Synth pop with a pulse — hooks to carry you through the last two hours.",
+            "link": "shopify://products/i-won-it-my-way-jazzy-stevens"
+          }
+        },
+        "fys_walking_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Hope",
+            "title": "Roxy Vale — Still I Am",
+            "description": "Soul rock built from early-morning clarity and quiet optimism.",
+            "link": "shopify://collections/roxy-vale-albums"
+          }
+        },
+        "fys_walking_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Wonder",
+            "title": "Roxy Vale — Still I Am",
+            "description": "Strength, wisdom and wonder, at walking pace.",
+            "link": "shopify://collections/roxy-vale-albums"
+          }
+        },
+        "fys_walking_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Adventure",
+            "title": "Iron Cedar — Return To The Seeds",
+            "description": "Rock rooted in Earth and ancestors — for walks that turn into expeditions.",
+            "link": "shopify://products/return-to-the-seeds"
+          }
+        },
+        "fys_walking_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Peace",
+            "title": "Wade McCoy — Americana",
+            "description": "Small-town stories and slow-burning romance, one step at a time.",
+            "link": "shopify://collections/wade-mccoy-albums"
+          }
+        },
+        "fys_walking_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Reflection",
+            "title": "Wade McCoy — Americana",
+            "description": "Songs that find the extraordinary in an ordinary walk home.",
+            "link": "shopify://collections/wade-mccoy-albums"
+          }
+        },
+        "fys_walking_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Walking",
+            "mood": "Energy",
+            "title": "Jazzy Stevens — Synth Pop Energy",
+            "description": "Synth shimmer and hooks that quicken your stride.",
+            "link": "shopify://products/i-won-it-my-way-jazzy-stevens"
+          }
+        },
+        "fys_relaxing_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Hope",
+            "title": "Alicia Ávila — Nueva Canción",
+            "description": "Warm Chilean folk — a celebration of ancestry, connection and easy afternoons.",
+            "link": "shopify://products/aun-estoy-alicia-avila"
+          }
+        },
+        "fys_relaxing_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Wonder",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Shimmering soundscapes that feel like a half-remembered summer.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_relaxing_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Adventure",
+            "title": "Luc Lake — Flare In The Sky",
+            "description": "Tech house that flows like water — movement without leaving the sofa.",
+            "link": "shopify://products/flare-in-the-sky"
+          }
+        },
+        "fys_relaxing_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Peace",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Airy vocals and lush synth pads. Nothing asked of you.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_relaxing_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Reflection",
+            "title": "Alicia Ávila — Nueva Canción",
+            "description": "Warm folk melodies where memory, laughter and hope dance side by side.",
+            "link": "shopify://products/aun-estoy-alicia-avila"
+          }
+        },
+        "fys_relaxing_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Relaxing",
+            "mood": "Energy",
+            "title": "Jazzy Stevens — Synth Pop Energy",
+            "description": "Pop energy for the living room — playful, magnetic, impossible to sit still to.",
+            "link": "shopify://products/i-won-it-my-way-jazzy-stevens"
+          }
+        },
+        "fys_meditating_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Hope",
+            "title": "Alicia Ávila — Nueva Canción",
+            "description": "Melodies where memory and hope sit side by side. A gentle place to breathe.",
+            "link": "shopify://products/aun-estoy-alicia-avila"
+          }
+        },
+        "fys_meditating_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Wonder",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Dream pop built from time loops and shared dreamscapes.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_meditating_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Adventure",
+            "title": "Iron Cedar — Return To The Seeds",
+            "description": "A sonic ritual — a call to the Earth, to ancestors, to the roots we share.",
+            "link": "shopify://products/return-to-the-seeds"
+          }
+        },
+        "fys_meditating_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Peace",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Soft dream-pop textures built for slow breathing and longer thoughts.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_meditating_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Reflection",
+            "title": "Wade McCoy — Americana",
+            "description": "Stories told quietly, with room left between the words.",
+            "link": "shopify://collections/wade-mccoy-albums"
+          }
+        },
+        "fys_meditating_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Meditating",
+            "mood": "Energy",
+            "title": "Luc Lake — Flare In The Sky",
+            "description": "Hypnotic, minimal, magnetic — stillness with a heartbeat under it.",
+            "link": "shopify://products/flare-in-the-sky"
+          }
+        },
+        "fys_dancing_hope": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Hope",
+            "title": "Leo Mar — Urban Latin",
+            "description": "Reggaeton with a heart wide open. Summer nights and new beginnings.",
+            "link": "shopify://collections/leo-mar-albums"
+          }
+        },
+        "fys_dancing_wonder": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Wonder",
+            "title": "Luc Lake — Flare In The Sky",
+            "description": "Deep basslines and vocal hooks that linger long after the beat drops.",
+            "link": "shopify://products/flare-in-the-sky"
+          }
+        },
+        "fys_dancing_adventure": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Adventure",
+            "title": "Leo Mar — Urban Latin",
+            "description": "Bilingual flow and sensual grooves — dance floors you have not found yet.",
+            "link": "shopify://collections/leo-mar-albums"
+          }
+        },
+        "fys_dancing_peace": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Peace",
+            "title": "Glass Daisy — Through The Glass Daisy",
+            "description": "Slow, weightless dream pop. For dancing with your eyes closed.",
+            "link": "shopify://products/through-the-glass-daisy-glass-daisy"
+          }
+        },
+        "fys_dancing_reflection": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Reflection",
+            "title": "Leo Mar — Urban Latin",
+            "description": "Love ballads with swagger, for the last dance of the night.",
+            "link": "shopify://collections/leo-mar-albums"
+          }
+        },
+        "fys_dancing_energy": {
+          "type": "result",
+          "settings": {
+            "activity": "Dancing",
+            "mood": "Energy",
+            "title": "Jazzy Stevens — Synth Pop Energy",
+            "description": "Groove-forward songs that move the body and the room.",
+            "link": "shopify://products/i-won-it-my-way-jazzy-stevens"
+          }
+        }
+      },
+      "block_order": [
+        "fys_driving_hope",
+        "fys_driving_wonder",
+        "fys_driving_adventure",
+        "fys_driving_peace",
+        "fys_driving_reflection",
+        "fys_driving_energy",
+        "fys_working_hope",
+        "fys_working_wonder",
+        "fys_working_adventure",
+        "fys_working_peace",
+        "fys_working_reflection",
+        "fys_working_energy",
+        "fys_walking_hope",
+        "fys_walking_wonder",
+        "fys_walking_adventure",
+        "fys_walking_peace",
+        "fys_walking_reflection",
+        "fys_walking_energy",
+        "fys_relaxing_hope",
+        "fys_relaxing_wonder",
+        "fys_relaxing_adventure",
+        "fys_relaxing_peace",
+        "fys_relaxing_reflection",
+        "fys_relaxing_energy",
+        "fys_meditating_hope",
+        "fys_meditating_wonder",
+        "fys_meditating_adventure",
+        "fys_meditating_peace",
+        "fys_meditating_reflection",
+        "fys_meditating_energy",
+        "fys_dancing_hope",
+        "fys_dancing_wonder",
+        "fys_dancing_adventure",
+        "fys_dancing_peace",
+        "fys_dancing_reflection",
+        "fys_dancing_energy"
+      ],
+      "settings": {
+        "eyebrow": "Still Deciding?",
+        "heading": "Find Your Sound",
+        "subheading": "You've met the artists. Now tell us what you're doing and how you want to feel — we'll point you to the one who fits.",
+        "activity_question": "What are you doing today?",
+        "activities": "Driving, Working, Walking, Relaxing, Meditating, Dancing",
+        "mood_question": "What mood are you looking for?",
+        "moods": "Hope, Wonder, Adventure, Peace, Reflection, Energy",
+        "result_cta_label": "Explore Album",
+        "restart_label": "Start over",
+        "fallback_title": "Roxy Vale — Still I Am",
+        "fallback_description": "Soul rock built from strength and wonder — a gentle place to start.",
+        "fallback_link": "shopify://collections/roxy-vale-albums"
+      }
+    },
+    "inelia_browse_music": {
+      "type": "inelia-browse-music",
+      "blocks": {
+        "chip_albums": {
+          "type": "chip",
+          "settings": {
+            "label": "Albums",
+            "link": "shopify://collections/albums"
+          }
+        },
+        "chip_singles": {
+          "type": "chip",
+          "settings": {
+            "label": "Singles",
+            "link": "shopify://collections/all"
+          }
+        },
+        "chip_collections": {
+          "type": "chip",
+          "settings": {
+            "label": "Collections",
+            "link": "shopify://collections/special-collections"
+          }
+        },
+        "chip_genre": {
+          "type": "chip",
+          "settings": {
+            "label": "Genre",
+            "link": "shopify://collections/pop-rock-soul"
+          }
+        },
+        "chip_mood": {
+          "type": "chip",
+          "settings": {
+            "label": "Mood",
+            "link": "shopify://collections/all"
+          }
+        },
+        "chip_theme": {
+          "type": "chip",
+          "settings": {
+            "label": "Theme",
+            "link": "shopify://collections/all"
+          }
+        },
+        "chip_artist": {
+          "type": "chip",
+          "settings": {
+            "label": "Voice",
+            "link": "/#inelia-artists"
+          }
+        }
+      },
+      "block_order": [
+        "chip_albums",
+        "chip_singles",
+        "chip_collections",
+        "chip_genre",
+        "chip_mood",
+        "chip_theme",
+        "chip_artist"
+      ],
+      "settings": {
+        "eyebrow": "Now That You Know Them",
+        "heading": "Browse Music",
+        "subheading": "Find your way in by album, artist, mood, or theme.",
+        "background": "white"
+      }
+    },
+    "inelia_best_sellers": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Start Where Listeners Begin",
+        "heading": "Best Sellers",
+        "subheading": "",
+        "collection": "albums",
+        "products_to_show": 4,
+        "show_vendor": true,
+        "show_view_all": true,
+        "view_all_label": "View All Music",
+        "background": "ivory"
+      }
+    },
+    "judgeme_reviews": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_featured_carousel_fnP6Jg": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "maxwidth": 1080
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_featured_carousel_fnP6Jg"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "inelia_merchandise": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Wear the Label",
+        "heading": "Merchandise",
+        "subheading": "",
+        "collection": "merchandise",
+        "products_to_show": 4,
+        "show_vendor": true,
+        "show_view_all": true,
+        "view_all_label": "View All Merchandise",
+        "background": "white"
+      }
+    },
+    "inelia_backstage_cta": {
+      "type": "inelia-backstage-cta",
+      "blocks": {
+        "benefit_singles": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Exclusive monthly singles"
+          }
+        },
+        "benefit_albums": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Pre-release albums"
+          }
+        },
+        "benefit_bts": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Behind-the-scenes content"
+          }
+        },
+        "benefit_lyrics": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Lyrics PDFs"
+          }
+        },
+        "benefit_lore": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Lore & backstories"
+          }
+        },
+        "benefit_discount": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "25% merch discount"
+          }
+        },
+        "benefit_member_releases": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Member-only releases"
+          }
+        },
+        "benefit_surprises": {
+          "type": "benefit",
+          "settings": {
+            "benefit": "Surprise drops"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_singles",
+        "benefit_albums",
+        "benefit_bts",
+        "benefit_lyrics",
+        "benefit_lore",
+        "benefit_discount",
+        "benefit_member_releases",
+        "benefit_surprises"
+      ],
+      "settings": {
+        "eyebrow": "Membership",
+        "heading": "BackStage Pass",
+        "text": "Not a subscription — a seat inside the label. Step past the catalog and into the studio with every artist you've discovered here.",
+        "button_label": "Join BackStage Pass",
+        "button_link": "shopify://products/backstage-pass",
+        "member_button_label": "Enter BackStage",
+        "member_button_link": "/pages/backstage-members"
+      }
+    }
+  },
+  "order": [
+    "inelia_hero",
+    "inelia_artists",
+    "inelia_featured_release",
+    "inelia_new_releases",
+    "inelia_find_your_sound",
+    "inelia_browse_music",
+    "inelia_best_sellers",
+    "judgeme_reviews",
+    "inelia_merchandise",
+    "inelia_backstage_cta"
+  ]
+}

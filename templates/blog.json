@@ -1,0 +1,121 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "layout": "collage",
+        "show_image": true,
+        "image_height": "small",
+        "show_date": false,
+        "show_author": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "collapsible_content_37V6MF": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_GYijbQ": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Roxy Vale - Soul Rock / Indi Rock",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_MHdNJT": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Iron Cedar - Native American Rock",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_BBin9R": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Glass Daisy - Dream Pop / Ethereal rock",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_WMqXny": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Leo Mar - Reggaeton / Latin Urban Pop",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_WXkwYK": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Alicia Avila - Chilean Cancion Rock",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_aY8BLW": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Luc Lake - Tech House",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_CXTHQ4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Jazzy Stevens - Pop Synth",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_GYijbQ",
+        "collapsible_row_MHdNJT",
+        "collapsible_row_BBin9R",
+        "collapsible_row_WMqXny",
+        "collapsible_row_WXkwYK",
+        "collapsible_row_aY8BLW",
+        "collapsible_row_CXTHQ4"
+      ],
+      "name": "Our Artists",
+      "settings": {
+        "caption": "",
+        "heading": "Our Artists",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "container_color_scheme": "",
+        "color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "collapsible_content_37V6MF"
+  ]
+}

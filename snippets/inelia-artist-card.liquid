@@ -1,0 +1,47 @@
+{% comment %}
+  Inelia Records — one artist card.
+  Shared by the Inelia Artists grid so the manual-block and the
+  metaobject-driven paths render identically.
+
+  Params:
+    image        — image object (optional; a gold ring placeholder shows without it)
+    name         — artist name, also the image alt
+    description  — one-line tagline (optional)
+    link         — artist page url
+    link_label   — "Explore Artist" style call to action (optional)
+    attributes   — block.shopify_attributes, for theme-editor targeting (optional)
+{% endcomment %}
+<a
+  class="inelia-artist-card inelia-reveal"
+  href="{{ link | default: '#' }}"
+  {{ attributes }}
+>
+  <div class="inelia-artist-card__img">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 900
+        | image_tag:
+          loading: 'lazy',
+          widths: '360, 540, 720, 900',
+          sizes: '(min-width: 990px) 25vw, 50vw',
+          alt: name
+      }}
+    {%- else -%}
+      <div class="inelia-artist-card__placeholder" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="90" stroke="#C8A24E" stroke-width="0.8"/>
+          <circle cx="100" cy="100" r="60" stroke="#C8A24E" stroke-width="0.8"/>
+          <circle cx="100" cy="100" r="30" stroke="#C8A24E" stroke-width="0.8"/>
+        </svg>
+      </div>
+    {%- endif -%}
+  </div>
+  <h3>{{ name }}</h3>
+  {%- if description != blank -%}
+    <p>{{ description }}</p>
+  {%- endif -%}
+  {%- if link_label != blank -%}
+    <span class="inelia-explore-link">{{ link_label }}</span>
+  {%- endif -%}
+</a>

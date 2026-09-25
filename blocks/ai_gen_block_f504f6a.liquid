@@ -1,0 +1,364 @@
+{% doc %}
+  @prompt
+    Create a mobile-optimized product page header section that displays in the top 15% of the mobile screen containing: the product image (album cover), store logo, artist name (product vendor or title), and one customer review. The layout should be compact and horizontally arranged where possible, with the album cover as a small thumbnail, logo icon, artist name text, and a single star rating with review excerpt. This should only apply to mobile viewports (max-width: 768px) and allow the rest of the product information to display normally below. Include responsive CSS to ensure proper sizing and spacing.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-mobile-product-header-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-mobile-product-header-{{ ai_gen_id }} {
+      display: block;
+      position: relative;
+      width: 100%;
+      background-color: {{ block.settings.background_color }};
+      padding: {{ block.settings.padding }}px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .ai-mobile-product-header__container-{{ ai_gen_id }} {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .ai-mobile-product-header__image-{{ ai_gen_id }} {
+      flex-shrink: 0;
+      width: {{ block.settings.image_size }}px;
+      height: {{ block.settings.image_size }}px;
+      border-radius: {{ block.settings.image_border_radius }}px;
+      overflow: hidden;
+      background-color: #f4f4f4;
+    }
+
+    .ai-mobile-product-header__image-{{ ai_gen_id }} img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ai-mobile-product-header__image-placeholder-{{ ai_gen_id }} {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f4f4f4;
+    }
+
+    .ai-mobile-product-header__image-placeholder-{{ ai_gen_id }} svg {
+      width: 60%;
+      height: 60%;
+      opacity: 0.3;
+    }
+
+    .ai-mobile-product-header__content-{{ ai_gen_id }} {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .ai-mobile-product-header__top-row-{{ ai_gen_id }} {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-mobile-product-header__logo-{{ ai_gen_id }} {
+      flex-shrink: 0;
+      width: {{ block.settings.logo_size }}px;
+      height: {{ block.settings.logo_size }}px;
+    }
+
+    .ai-mobile-product-header__logo-{{ ai_gen_id }} img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .ai-mobile-product-header__artist-{{ ai_gen_id }} {
+      font-size: {{ block.settings.artist_font_size }}px;
+      font-weight: 600;
+      color: {{ block.settings.text_color }};
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ai-mobile-product-header__review-{{ ai_gen_id }} {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ai-mobile-product-header__stars-{{ ai_gen_id }} {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .ai-mobile-product-header__star-{{ ai_gen_id }} {
+      width: {{ block.settings.star_size }}px;
+      height: {{ block.settings.star_size }}px;
+      fill: {{ block.settings.star_color }};
+    }
+
+    .ai-mobile-product-header__star-empty-{{ ai_gen_id }} {
+      fill: {{ block.settings.star_empty_color }};
+    }
+
+    .ai-mobile-product-header__review-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.review_font_size }}px;
+      color: {{ block.settings.review_text_color }};
+      line-height: 1.4;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ai-mobile-product-header__empty-review-{{ ai_gen_id }} {
+      font-size: {{ block.settings.review_font_size }}px;
+      color: #999;
+      font-style: italic;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-mobile-product-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-mobile-product-header__container-{{ ai_gen_id }}">
+    <div class="ai-mobile-product-header__image-{{ ai_gen_id }}">
+      {% if product.featured_image %}
+        <img
+          src="{{ product.featured_image | image_url: width: 200 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          width="200"
+          height="200"
+          loading="eager"
+        >
+      {% else %}
+        <div class="ai-mobile-product-header__image-placeholder-{{ ai_gen_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-mobile-product-header__content-{{ ai_gen_id }}">
+      <div class="ai-mobile-product-header__top-row-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <div class="ai-mobile-product-header__logo-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.logo | image_url: width: 100 }}"
+              alt="{{ shop.name }}"
+              width="100"
+              height="100"
+              loading="eager"
+            >
+          </div>
+        {% endif %}
+
+        <h1 class="ai-mobile-product-header__artist-{{ ai_gen_id }}">
+          {% if block.settings.show_vendor and product.vendor != blank %}
+            {{ product.vendor }}
+          {% else %}
+            {{ product.title }}
+          {% endif %}
+        </h1>
+      </div>
+
+      <div class="ai-mobile-product-header__review-{{ ai_gen_id }}">
+        {% if block.settings.review_text != blank %}
+          <div class="ai-mobile-product-header__stars-{{ ai_gen_id }}">
+            {% for i in (1..5) %}
+              {% if i <= block.settings.review_rating %}
+                <svg class="ai-mobile-product-header__star-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              {% else %}
+                <svg class="ai-mobile-product-header__star-{{ ai_gen_id }} ai-mobile-product-header__star-empty-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p class="ai-mobile-product-header__review-text-{{ ai_gen_id }}">
+            "{{ block.settings.review_text }}"
+          </p>
+        {% else %}
+          <p class="ai-mobile-product-header__empty-review-{{ ai_gen_id }}">
+            Add a customer review in the block settings
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Mobile product header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Album cover"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Image size",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Artist name"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor as artist name",
+      "default": true,
+      "info": "If unchecked, product title will be shown"
+    },
+    {
+      "type": "range",
+      "id": "artist_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Customer review"
+    },
+    {
+      "type": "range",
+      "id": "review_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text",
+      "label": "Review excerpt",
+      "default": "Amazing album! The soundscapes are incredible."
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Star size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty star color",
+      "default": "#E0E0E0"
+    },
+    {
+      "type": "range",
+      "id": "review_font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Review font size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "review_text_color",
+      "label": "Review text color",
+      "default": "#666666"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile product header"
+    }
+  ]
+}
+{% endschema %}

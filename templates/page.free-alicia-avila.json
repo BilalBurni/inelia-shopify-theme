@@ -1,0 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "free_song_download": {
+      "type": "inelia-free-song-download",
+      "settings": {
+        "image": "shopify://shop_images/Alicia_Avila.png",
+        "eyebrow": "Your Free Song",
+        "artist_name": "Alicia Ávila",
+        "song_title": "Donde Canta el Agua",
+        "custom_message": "",
+        "mp3_url": "https://cdn.shopify.com/s/files/1/0769/8042/0856/files/Donde_Canta_El_Agua_-_Alicia_Avila.mp3?v=1789452912",
+        "button_label": "Download Your Song",
+        "campaign": "Instagram Free Single",
+        "background": "white"
+      }
+    }
+  },
+  "order": [
+    "free_song_download"
+  ]
+}

@@ -1,0 +1,249 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "artist_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "image": "shopify://shop_images/Roxy_Vale_2.png",
+        "scrim_opacity": 55,
+        "height": "large",
+        "show_rings": false,
+        "content_position": "center",
+        "eyebrow": "Soul Rock / Pop Rock",
+        "heading": "Roxy Vale",
+        "show_divider": true,
+        "text": "Soul rock with strength, wisdom and wonder.",
+        "button_1_label": "Listen Now",
+        "button_1_link": "",
+        "button_2_label": "Join BackStage Pass",
+        "button_2_link": "shopify://products/backstage-pass",
+        "button_2_style": "gold-solid"
+      }
+    },
+    "artist_bio": {
+      "type": "inelia-artist-bio",
+      "settings": {
+        "eyebrow": "The Story",
+        "heading": "Biography",
+        "subheading": "",
+        "image": "shopify://shop_images/Roxy_Vale_2.png",
+        "image_position": "left",
+        "text": "<p>Roxy Vale was born from the core of the <em>WE</em> expression — a voice woven from strength, wisdom, and vulnerability, yet alive with curiosity and wonder. She embodies the larger awareness of our world and reality, singing with a presence that is both timeless and new.</p><p>Her music is a collaboration between imagination and AI as a tool of expression, giving Roxy her own distinct sound, story, and stage presence. More than a singer, Roxy Vale is a creative expression of all the experiences, wisdoms and dreams that so many of us are ready for.</p>",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "artist_newest_release": {
+      "type": "inelia-featured-release",
+      "settings": {
+        "eyebrow": "Newest Release",
+        "heading": "Latest From Roxy Vale",
+        "product": "call-of-the-machi-roxy-vale",
+        "artist": "Roxy Vale",
+        "title": "",
+        "description": "Roxy Vale's newest album — powerful music that weaves right into where the collective is right now.",
+        "listen_label": "Listen",
+        "listen_link": "",
+        "album_label": "Explore Album",
+        "album_link": "",
+        "background": "ivory"
+      }
+    },
+    "artist_albums": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Full-Length Worlds",
+        "heading": "Albums",
+        "subheading": "",
+        "collection": "roxy-vale-albums",
+        "products_to_show": 4,
+        "show_vendor": false,
+        "show_view_all": true,
+        "view_all_label": "All Roxy Vale Music",
+        "background": "white"
+      }
+    },
+    "artist_singles": {
+      "type": "inelia-backstage-teaser",
+      "settings": {
+        "eyebrow": "One Song at a Time",
+        "heading": "Singles",
+        "subheading": "",
+        "text": "New Roxy Vale singles land inside BackStage every month, long before they reach the public. ",
+        "member_cta_label": "Enter BackStage",
+        "member_link": "/pages/backstage-members",
+        "join_label": "Join BackStage",
+        "join_link": "shopify://products/backstage-pass",
+        "login_label": "Log In",
+        "background": "ivory"
+      }
+    },
+    "artist_backstage_exclusives": {
+      "type": "inelia-locked-teaser",
+      "blocks": {
+        "locked_singles": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive Singles",
+            "description": "Fresh Roxy Vale tracks before the world hears them.",
+            "link": ""
+          }
+        },
+        "locked_acoustic": {
+          "type": "card",
+          "settings": {
+            "title": "Acoustic Versions",
+            "description": "Stripped-back takes, members only.",
+            "link": ""
+          }
+        },
+        "locked_bts": {
+          "type": "card",
+          "settings": {
+            "title": "Behind the Music",
+            "description": "Lore, backstories and studio mysteries.",
+            "link": ""
+          }
+        },
+        "locked_lyrics": {
+          "type": "card",
+          "settings": {
+            "title": "Lyrics Companion PDFs",
+            "description": "Every word, beautifully typeset.",
+            "link": ""
+          }
+        },
+        "locked_artwork": {
+          "type": "card",
+          "settings": {
+            "title": "Bonus Artwork",
+            "description": "Alternate covers and visual worlds.",
+            "link": ""
+          }
+        },
+        "locked_notes": {
+          "type": "card",
+          "settings": {
+            "title": "Studio Notes",
+            "description": "How each release came to life.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "locked_singles",
+        "locked_acoustic",
+        "locked_bts",
+        "locked_lyrics",
+        "locked_artwork",
+        "locked_notes"
+      ],
+      "settings": {
+        "eyebrow": "Members Only",
+        "heading": "BackStage Exclusives",
+        "subheading": "A glimpse of what waits behind the curtain for Roxy Vale.",
+        "member_link": "/pages/backstage-members",
+        "join_label": "Join BackStage",
+        "join_link": "shopify://products/backstage-pass",
+        "login_label": "Log In",
+        "background": "white"
+      }
+    },
+    "artist_merch": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Wear the World",
+        "heading": "Merchandise",
+        "subheading": "",
+        "collection": "merchandise",
+        "products_to_show": 4,
+        "show_vendor": false,
+        "show_view_all": true,
+        "view_all_label": "All Merchandise",
+        "background": "ivory"
+      }
+    },
+    "artist_related": {
+      "type": "inelia-artists",
+      "blocks": {
+        "related_1": {
+          "type": "artist",
+          "settings": {
+            "image": "shopify://shop_images/Glass_Daisy_singer.jpg",
+            "name": "Glass Daisy",
+            "description": "Dream pop for parallel-universe love stories.",
+            "link": "/pages/glass-daisy"
+          }
+        },
+        "related_2": {
+          "type": "artist",
+          "settings": {
+            "image": "shopify://shop_images/Iron_Cedar.jpg",
+            "name": "Iron Cedar",
+            "description": "Native American rock rooted in Earth and ancestors.",
+            "link": "/pages/iron-cedar"
+          }
+        },
+        "related_3": {
+          "type": "artist",
+          "settings": {
+            "image": "shopify://shop_images/Jazzy_Stevens.png",
+            "name": "Jazzy Stevens",
+            "description": "Synth pop energy that's fun, fierce and unforgettable.",
+            "link": "/pages/jazzy-stevens"
+          }
+        },
+        "related_4": {
+          "type": "artist",
+          "settings": {
+            "image": "shopify://shop_images/Alicia_Avila.png",
+            "name": "Alicia Ávila",
+            "description": "Nueva Canción Chilena bridging cultures and hearts.",
+            "link": "/pages/alicia-avila"
+          }
+        }
+      },
+      "block_order": [
+        "related_1",
+        "related_2",
+        "related_3",
+        "related_4"
+      ],
+      "settings": {
+        "eyebrow": "Keep Exploring",
+        "heading": "Related Artists",
+        "subheading": "",
+        "link_label": "Explore Artist",
+        "background": "white"
+      }
+    },
+    "artist_newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "artist_hero",
+    "artist_bio",
+    "artist_newest_release",
+    "artist_albums",
+    "artist_singles",
+    "artist_backstage_exclusives",
+    "artist_merch",
+    "artist_related",
+    "artist_newsletter"
+  ]
+}

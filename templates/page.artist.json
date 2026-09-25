@@ -1,0 +1,209 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "artist_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "image": "",
+        "scrim_opacity": 55,
+        "height": "large",
+        "show_rings": false,
+        "content_position": "center",
+        "eyebrow": "",
+        "heading": "",
+        "show_divider": true,
+        "text": "",
+        "button_1_label": "Listen Now",
+        "button_1_link": "",
+        "button_2_label": "Join BackStage Pass",
+        "button_2_link": "shopify://products/backstage-pass",
+        "button_2_style": "gold-solid"
+      }
+    },
+    "artist_bio": {
+      "type": "inelia-artist-bio",
+      "settings": {
+        "eyebrow": "The Story",
+        "heading": "Biography",
+        "subheading": "",
+        "image": "",
+        "image_position": "left",
+        "text": "",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "artist_newest_release": {
+      "type": "inelia-featured-release",
+      "settings": {
+        "artist_handle": "",
+        "eyebrow": "Newest Release",
+        "heading": "Latest From {artist}",
+        "product": "",
+        "artist": "",
+        "title": "",
+        "description": "",
+        "listen_label": "Listen",
+        "listen_link": "",
+        "album_label": "Explore Album",
+        "album_link": "",
+        "background": "ivory"
+      }
+    },
+    "artist_albums": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Full-Length Worlds",
+        "heading": "Albums",
+        "subheading": "",
+        "collection": "",
+        "products_to_show": 4,
+        "show_vendor": false,
+        "show_view_all": true,
+        "view_all_label": "All {artist} Music",
+        "background": "white"
+      }
+    },
+    "artist_singles": {
+      "type": "inelia-backstage-teaser",
+      "settings": {
+        "eyebrow": "One Song at a Time",
+        "heading": "Singles",
+        "subheading": "",
+        "text": "New {artist} singles land inside BackStage every month, long before they reach the public.",
+        "member_cta_label": "Enter BackStage",
+        "member_link": "/pages/backstage-members",
+        "join_label": "Join BackStage",
+        "join_link": "shopify://products/backstage-pass",
+        "login_label": "Log In",
+        "background": "ivory"
+      }
+    },
+    "artist_backstage_exclusives": {
+      "type": "inelia-locked-teaser",
+      "blocks": {
+        "locked_singles": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive Singles",
+            "description": "Fresh {artist} tracks before the world hears them.",
+            "link": ""
+          }
+        },
+        "locked_acoustic": {
+          "type": "card",
+          "settings": {
+            "title": "Acoustic Versions",
+            "description": "Stripped-back takes, members only.",
+            "link": ""
+          }
+        },
+        "locked_bts": {
+          "type": "card",
+          "settings": {
+            "title": "Behind the Music",
+            "description": "Lore, backstories and studio mysteries.",
+            "link": ""
+          }
+        },
+        "locked_lyrics": {
+          "type": "card",
+          "settings": {
+            "title": "Lyrics Companion PDFs",
+            "description": "Every word, beautifully typeset.",
+            "link": ""
+          }
+        },
+        "locked_artwork": {
+          "type": "card",
+          "settings": {
+            "title": "Bonus Artwork",
+            "description": "Alternate covers and visual worlds.",
+            "link": ""
+          }
+        },
+        "locked_notes": {
+          "type": "card",
+          "settings": {
+            "title": "Studio Notes",
+            "description": "How each release came to life.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "locked_singles",
+        "locked_acoustic",
+        "locked_bts",
+        "locked_lyrics",
+        "locked_artwork",
+        "locked_notes"
+      ],
+      "settings": {
+        "eyebrow": "Members Only",
+        "heading": "BackStage Exclusives",
+        "subheading": "A glimpse of what waits behind the curtain for {artist}.",
+        "member_link": "/pages/backstage-members",
+        "member_cta_label": "Enter BackStage",
+        "join_label": "Join BackStage",
+        "join_link": "shopify://products/backstage-pass",
+        "login_label": "Log In",
+        "background": "white"
+      }
+    },
+    "artist_merch": {
+      "type": "inelia-product-showcase",
+      "settings": {
+        "eyebrow": "Wear the World",
+        "heading": "Merchandise",
+        "subheading": "",
+        "collection": "merchandise",
+        "products_to_show": 4,
+        "show_vendor": false,
+        "show_view_all": true,
+        "view_all_label": "All Merchandise",
+        "background": "ivory"
+      }
+    },
+    "artist_related": {
+      "type": "inelia-artists",
+      "settings": {
+        "source": "metaobject",
+        "limit": 4,
+        "eyebrow": "Keep Exploring",
+        "heading": "Related Artists",
+        "subheading": "",
+        "link_label": "Explore Artist",
+        "background": "white"
+      }
+    },
+    "artist_newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "artist_hero",
+    "artist_bio",
+    "artist_newest_release",
+    "artist_albums",
+    "artist_singles",
+    "artist_backstage_exclusives",
+    "artist_merch",
+    "artist_related",
+    "artist_newsletter"
+  ]
+}

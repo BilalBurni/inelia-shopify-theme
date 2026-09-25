@@ -1,0 +1,139 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "members_hero": {
+      "type": "inelia-hero",
+      "settings": {
+        "scrim_opacity": 55,
+        "height": "compact",
+        "show_rings": true,
+        "content_position": "center",
+        "eyebrow": "BackStage Pass",
+        "heading": "Welcome BackStage",
+        "show_divider": true,
+        "text": "Everything new this month, in one quiet place.",
+        "button_1_label": "",
+        "button_1_link": "",
+        "button_2_label": "Log In",
+        "button_2_link": "/account/login",
+        "button_2_style": "gold-solid",
+        "button_2_hide_logged_in": true
+      }
+    },
+    "members_downloads_app": {
+      "type": "apps",
+      "blocks": {
+        "sky_pilot_library": {
+          "type": "shopify://apps/sky-pilot/blocks/customer_digital_library_button/d19e6703-9148-4c06-b38c-b4d4f4a42811",
+          "settings": {
+            "button_label": "Open My Downloads Library",
+            "justification": "center",
+            "hide_if_no_downloads": false,
+            "css_classes": "inelia-btn inelia-btn--gold-solid inelia-downloads-cta",
+            "custom_css": "margin: 0;"
+          }
+        }
+      },
+      "block_order": [
+        "sky_pilot_library"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "members_content": {
+      "type": "inelia-members-content",
+      "blocks": {
+        "content_singles": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "2026",
+            "title": "Singles",
+            "subtitle": "A fresh set of tracks every month, released well before the world hears them.",
+            "text": "<p>Every month's singles, newest first. Open your library and you'll find them under SINGLES, filed by month.</p>",
+            "embed": "",
+            "button_label": "Open Singles",
+            "link_to_library": true,
+            "button_link": ""
+          }
+        },
+        "content_album": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "2026",
+            "title": "Albums",
+            "subtitle": "Full pre-release albums, with their lyrics companions.",
+            "text": "<p>Hear each album in full before it reaches the public. You'll find these under ALBUMS in your library.</p>",
+            "embed": "",
+            "button_label": "Open Albums",
+            "link_to_library": true,
+            "button_link": ""
+          }
+        },
+        "content_specials": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "2026",
+            "title": "Special Albums",
+            "subtitle": "Seasonal releases and one-off collections.",
+            "text": "<p>The releases that don't follow the monthly rhythm. Filed under SPECIAL ALBUMS in your library.</p>",
+            "embed": "",
+            "button_label": "Open Specials",
+            "link_to_library": true,
+            "button_link": ""
+          }
+        },
+        "content_archive": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Archive",
+            "title": "2025",
+            "subtitle": "Everything from last year, still yours.",
+            "text": "<p>Your membership doesn't just cover what's new. The full back catalogue stays open to you, filed by year.</p>",
+            "embed": "",
+            "button_label": "Open Archive",
+            "link_to_library": true,
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "content_singles",
+        "content_album",
+        "content_specials",
+        "content_archive"
+      ],
+      "settings": {
+        "eyebrow": "Behind the Velvet Curtain",
+        "heading": "Your BackStage",
+        "intro": "<p>Welcome back. Everything you have access to lives in your downloads library, organised by year and by type. The sections below take you straight there.</p>",
+        "locked_note": "Members only — log in to play and download.",
+        "locked_cta_label": "Log In to Unlock",
+        "background": "ivory"
+      }
+    },
+    "library": {
+      "type": "inelia-library",
+      "settings": {
+        "eyebrow": "The Whole Catalogue",
+        "heading": "Library",
+        "subheading": "Every release, in one place — newest first.",
+        "background": "white"
+      }
+    }
+  },
+  "order": [
+    "members_hero",
+    "members_downloads_app",
+    "members_content",
+    "library"
+  ]
+}

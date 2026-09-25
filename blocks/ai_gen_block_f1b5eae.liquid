@@ -1,0 +1,305 @@
+{% doc %}
+  @prompt
+    i want to place a banner that links to my favorite product
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-banner-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-product-banner__link-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .ai-product-banner__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.banner_height }}px;
+    overflow: hidden;
+  }
+
+  .ai-product-banner__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-product-banner__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-product-banner__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-product-banner__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-product-banner__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .ai-product-banner__content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    z-index: 1;
+  }
+
+  .ai-product-banner__title-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .ai-product-banner__subtitle-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.subtitle_size }}px;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-banner__image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.banner_height | times: 0.6 }}px;
+    }
+
+    .ai-product-banner__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-product-banner__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<product-banner-{{ ai_gen_id }} class="ai-product-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.product %}
+    <a href="{{ block.settings.product.url }}" class="ai-product-banner__link-{{ ai_gen_id }}">
+      <div class="ai-product-banner__image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.banner_image %}
+          <img
+            src="{{ block.settings.banner_image | image_url: width: 2000 }}"
+            alt="{{ block.settings.banner_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.banner_image.width }}"
+            height="{{ block.settings.banner_image.height }}"
+            class="ai-product-banner__image-{{ ai_gen_id }}"
+          >
+        {% elsif block.settings.product.featured_image %}
+          <img
+            src="{{ block.settings.product.featured_image | image_url: width: 2000 }}"
+            alt="{{ block.settings.product.featured_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.product.featured_image.width }}"
+            height="{{ block.settings.product.featured_image.height }}"
+            class="ai-product-banner__image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-product-banner__placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        <div class="ai-product-banner__overlay-{{ ai_gen_id }}"></div>
+
+        {% if block.settings.show_text %}
+          <div class="ai-product-banner__content-{{ ai_gen_id }}">
+            {% if block.settings.title != blank %}
+              <h2 class="ai-product-banner__title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+            {% endif %}
+            {% if block.settings.subtitle != blank %}
+              <p class="ai-product-banner__subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </a>
+  {% else %}
+    <div class="ai-product-banner__link-{{ ai_gen_id }}">
+      <div class="ai-product-banner__image-wrapper-{{ ai_gen_id }}">
+        <div class="ai-product-banner__placeholder-{{ ai_gen_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+          <div class="ai-product-banner__empty-state-{{ ai_gen_id }}">
+            Next, select your favorite product
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</product-banner-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductBanner{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+
+    customElements.define('product-banner-{{ ai_gen_id }}', ProductBanner{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image",
+      "info": "Leave empty to use product image"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Banner height",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text",
+      "label": "Show text overlay",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Product"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Shop now"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product banner"
+    }
+  ]
+}
+{% endschema %}

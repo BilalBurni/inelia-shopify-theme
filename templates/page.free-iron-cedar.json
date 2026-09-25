@@ -1,0 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "free_song_download": {
+      "type": "inelia-free-song-download",
+      "settings": {
+        "image": "shopify://shop_images/Iron_Cedar.jpg",
+        "eyebrow": "Your Free Song",
+        "artist_name": "Iron Cedar",
+        "song_title": "Keep Your Rhythm",
+        "custom_message": "",
+        "mp3_url": "https://cdn.shopify.com/s/files/1/0769/8042/0856/files/Keep_Your_Rhythm_-_Iron_Cedar.mp3?v=1789452914",
+        "button_label": "Download Your Song",
+        "campaign": "Instagram Free Single",
+        "background": "white"
+      }
+    }
+  },
+  "order": [
+    "free_song_download"
+  ]
+}

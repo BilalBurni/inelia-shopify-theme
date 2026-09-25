@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "monthly_free_song": {
+      "type": "inelia-free-song-download",
+      "settings": {
+        "image": "",
+        "eyebrow": "This Month's Free Song",
+        "artist_name": "Artist Name",
+        "song_title": "Song Title",
+        "custom_message": "",
+        "mp3_url": "",
+        "button_label": "Download Your Song",
+        "campaign": "Monthly Free Song",
+        "background": "white"
+      }
+    }
+  },
+  "order": [
+    "monthly_free_song"
+  ]
+}

@@ -1,0 +1,223 @@
+{% comment %}
+  Inelia Records — Find Your Sound
+  Two-step discovery assistant (activity → mood → recommendation).
+  Each "Recommendation" block maps an activity + mood pair to an
+  album/artist. The "Default" fields catch unmapped combinations.
+  Logic lives in assets/inelia.js.
+{% endcomment %}
+
+{%- capture fys_json -%}
+{
+  "results": {
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'result' -%}
+        {{ block.settings.activity | append: '|' | append: block.settings.mood | json }}: {
+          "title": {{ block.settings.title | json }},
+          "description": {{ block.settings.description | json }},
+          "url": {{ block.settings.link | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  },
+  "fallback": {
+    "title": {{ section.settings.fallback_title | json }},
+    "description": {{ section.settings.fallback_description | json }},
+    "url": {{ section.settings.fallback_link | json }}
+  }
+}
+{%- endcapture -%}
+
+<div class="inelia-section inelia-section--ivory" data-inelia-fys>
+  <script type="application/json" data-fys-results>
+    {{ fys_json }}
+  </script>
+
+  <div class="inelia-fys__shell">
+    <div class="inelia-section-head inelia-reveal" style="margin-bottom: 48px;">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p>{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="inelia-fys__steps inelia-reveal">
+      <div class="inelia-fys__step inelia-active" data-fys-step="activity">
+        <h3>{{ section.settings.activity_question }}</h3>
+        <div class="inelia-fys__tiles">
+          {%- assign activities = section.settings.activities | split: ',' -%}
+          {%- for activity in activities -%}
+            {%- assign val = activity | strip -%}
+            <button type="button" class="inelia-fys__tile" data-val="{{ val | escape }}">{{ val }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="inelia-fys__step" data-fys-step="mood">
+        <h3>{{ section.settings.mood_question }}</h3>
+        <div class="inelia-fys__tiles">
+          {%- assign moods = section.settings.moods | split: ',' -%}
+          {%- for mood in moods -%}
+            {%- assign val = mood | strip -%}
+            <button type="button" class="inelia-fys__tile" data-val="{{ val | escape }}">{{ val }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="inelia-fys__step" data-fys-step="result">
+        <div class="inelia-fys__result">
+          <svg class="inelia-fys__result-rings" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="95" fill="none" stroke="#C8A24E" stroke-width="1"/>
+            <circle cx="100" cy="100" r="65" fill="none" stroke="#C8A24E" stroke-width="1"/>
+            <circle cx="100" cy="100" r="35" fill="none" stroke="#C8A24E" stroke-width="1"/>
+          </svg>
+          <span class="inelia-fys__label" data-fys-tag></span>
+          <h3 data-fys-title></h3>
+          <p data-fys-desc></p>
+          <a class="inelia-btn inelia-btn--gold" href="#" data-fys-cta>{{ section.settings.result_cta_label }}</a>
+          <div>
+            <button type="button" class="inelia-fys__restart" data-fys-restart>{{ section.settings.restart_label }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inelia Find Your Sound",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Still Deciding?"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find Your Sound"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "You've met the artists. Now tell us what you're doing and how you want to feel — we'll point you to the one who fits."
+    },
+    {
+      "type": "text",
+      "id": "activity_question",
+      "label": "Step 1 question",
+      "default": "What are you doing today?"
+    },
+    {
+      "type": "text",
+      "id": "activities",
+      "label": "Activities (comma separated)",
+      "default": "Driving, Working, Walking, Relaxing, Meditating, Dancing"
+    },
+    {
+      "type": "text",
+      "id": "mood_question",
+      "label": "Step 2 question",
+      "default": "What mood are you looking for?"
+    },
+    {
+      "type": "text",
+      "id": "moods",
+      "label": "Moods (comma separated)",
+      "default": "Hope, Wonder, Adventure, Peace, Reflection, Energy"
+    },
+    {
+      "type": "text",
+      "id": "result_cta_label",
+      "label": "Result button label",
+      "default": "Explore Album"
+    },
+    {
+      "type": "text",
+      "id": "restart_label",
+      "label": "Restart label",
+      "default": "Start over"
+    },
+    {
+      "type": "header",
+      "content": "Default recommendation"
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Default title",
+      "default": "Roxy Vale — Still I Am"
+    },
+    {
+      "type": "textarea",
+      "id": "fallback_description",
+      "label": "Default description",
+      "default": "Soul rock built from strength and wonder — a gentle place to start."
+    },
+    {
+      "type": "url",
+      "id": "fallback_link",
+      "label": "Default link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "result",
+      "name": "Recommendation",
+      "settings": [
+        {
+          "type": "text",
+          "id": "activity",
+          "label": "Activity (must match an activity above)",
+          "default": "Driving"
+        },
+        {
+          "type": "text",
+          "id": "mood",
+          "label": "Mood (must match a mood above)",
+          "default": "Wonder"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Recommendation title",
+          "default": "Luc Lake — Flare In The Sky"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "A wide, cinematic record built for long roads and open windows."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 36,
+  "presets": [
+    {
+      "name": "Inelia Find Your Sound",
+      "blocks": [
+        { "type": "result", "settings": { "activity": "Driving", "mood": "Wonder", "title": "Luc Lake — Flare In The Sky", "description": "A wide, cinematic record built for long roads and open windows — synths that bloom slowly, drums that never rush." } },
+        { "type": "result", "settings": { "activity": "Dancing", "mood": "Energy", "title": "Jazzy Stevens — Synth Pop Energy", "description": "Groove-forward songs that move the body and the room." } },
+        { "type": "result", "settings": { "activity": "Meditating", "mood": "Peace", "title": "Glass Daisy — Through The Glass Daisy", "description": "Soft dream-pop textures built for slow breathing and longer thoughts." } },
+        { "type": "result", "settings": { "activity": "Walking", "mood": "Hope", "title": "Roxy Vale — Still I Am", "description": "Soul rock built from early-morning clarity and quiet optimism." } },
+        { "type": "result", "settings": { "activity": "Relaxing", "mood": "Reflection", "title": "Alicia Ávila — Nueva Canción", "description": "Warm folk melodies where memory, laughter and hope dance side by side." } },
+        { "type": "result", "settings": { "activity": "Working", "mood": "Adventure", "title": "Iron Cedar — Return To The Seeds", "description": "Native rock with the pull of distance and the open road." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

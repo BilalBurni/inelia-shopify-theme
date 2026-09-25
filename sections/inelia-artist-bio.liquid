@@ -1,0 +1,167 @@
+{% comment %}
+  Inelia Records — Artist Biography
+  Editorial image + text block. Used on artist pages, but flexible
+  enough for About or any story-driven page.
+
+  Artist pages: image and text are left blank in the template and filled
+  from the `artist` metaobject matched on the page handle. Anything typed
+  into the section wins, so this stays usable on About-style pages.
+{% endcomment %}
+
+{%- liquid
+  # Metaobject fields are only readable inside a `for` loop on this store,
+  # so capture what we need into plain variables while looping.
+  # Reached either via a metaobject template (the entry is the page) or a
+  # Shopify page whose handle matches an artist.
+  assign artist_handle = page.handle
+  if metaobject != blank
+    assign artist_handle = metaobject.system.handle
+  endif
+
+  assign artist_name = ''
+  assign artist_bio = nil
+  assign artist_photo = nil
+  if artist_handle != blank
+    for artist in shop.metaobjects.artist.values
+      if artist.system.handle == artist_handle
+        assign artist_name = artist.name
+        assign artist_bio = artist.bio
+        assign artist_photo = artist.photo.value
+        break
+      endif
+    endfor
+  endif
+
+  assign bio_image = section.settings.image
+  if bio_image == blank
+    assign bio_image = artist_photo
+  endif
+  # The section's own setting is a `richtext` type and is already HTML, but
+  # the metaobject's Bio is a rich text field — it stringifies to its raw
+  # JSON ({"type":"root","children":[…]}) unless it goes through
+  # metafield_tag. So the two sources have to be rendered differently.
+  assign bio_text = section.settings.text
+  assign bio_from_artist = false
+  if bio_text == blank and artist_bio != blank
+    assign bio_from_artist = true
+  endif
+  # The portrait describes the artist, not the "Biography" heading.
+  assign bio_alt = artist_name | default: section.settings.heading
+-%}
+
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+    <div class="inelia-section-head inelia-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2>{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      <div class="inelia-divider"></div>
+    </div>
+  {%- endif -%}
+
+  <div class="inelia-release inelia-reveal{% if section.settings.image_position == 'right' %} inelia-release--flip{% endif %}">
+    <div class="inelia-release__art" style="aspect-ratio: 3 / 4;">
+      {%- if bio_image != blank -%}
+        {{
+          bio_image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', widths: '550, 800, 1200', sizes: '(min-width: 990px) 50vw, 100vw', alt: bio_alt
+        }}
+      {%- endif -%}
+    </div>
+    <div class="inelia-release__info">
+      {%- if section.settings.subheading != blank -%}
+        <span class="inelia-eyebrow" style="margin-bottom: 10px;">{{ section.settings.subheading }}</span>
+      {%- endif -%}
+      <div style="font-size: 16px; line-height: 1.8; color: #444;">
+        {%- if bio_from_artist -%}
+          {{ artist_bio | metafield_tag }}
+        {%- else -%}
+          {{ bio_text }}
+        {%- endif -%}
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <div style="margin-top: 32px;">
+          <a class="inelia-btn inelia-btn--dark" href="{{ section.settings.button_link | default: '#' }}">
+            {{- section.settings.button_label -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% style %}
+  @media (min-width: 990px) {
+    .inelia-release--flip .inelia-release__art { order: 2; }
+    .inelia-release--flip .inelia-release__info { order: 1; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Inelia Artist Bio",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Biography"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Small heading above text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (3:4)",
+      "info": "On an artist page, leave empty to use that artist's Photo."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "info": "On an artist page, leave empty to use that artist's Bio.",
+      "default": "<p>Artist biography goes here. Tell the story of this artist's world — where the music comes from, what it carries, and where it wants to take the listener.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia Artist Bio"
+    }
+  ]
+}
+{% endschema %}

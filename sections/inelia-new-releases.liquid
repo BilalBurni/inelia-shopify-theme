@@ -1,0 +1,183 @@
+{%- comment -%}
+  Inelia Records — New This Week
+  Lists the most recent `release` metaobjects across all artists, newest
+  first. Reads entirely from metaobjects, so a new release entry appears
+  here automatically.
+
+  Notes on metaobject access (verified on this store):
+  - Metaobject fields are only readable INSIDE a `{% for %}` loop over
+    `shop.metaobjects.release.values` — `.first`, index access and the
+    `sort` filter return empty. So we sort manually and render via a
+    nested lookup loop.
+  - `cover_art` is currently unset on the entries, so the card art falls
+    back to the linked product's featured image.
+{%- endcomment -%}
+
+{%- liquid
+  # Pass 1 — build sortable "YYYYMMDD~handle" keys (fields work in-loop).
+  assign keys = ''
+  for r in shop.metaobjects.release.values
+    assign d = r.release_date | date: '%Y%m%d'
+    assign entry = d | append: '~' | append: r.system.handle
+    if forloop.first
+      assign keys = entry
+    else
+      assign keys = keys | append: ',' | append: entry
+    endif
+  endfor
+  assign ordered = keys | split: ',' | sort | reverse
+  assign total = shop.metaobjects.release.values.size
+  assign show = section.settings.releases_to_show
+-%}
+
+<div class="inelia-section inelia-section--{{ section.settings.background }}">
+  <div class="inelia-section-head inelia-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="inelia-eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    <div class="inelia-divider"></div>
+  </div>
+
+  <div class="inelia-products__grid inelia-reveal">
+    {%- if total > 0 -%}
+      {%- assign shown = 0 -%}
+      {%- for key in ordered -%}
+        {%- if shown >= show -%}{%- break -%}{%- endif -%}
+        {%- assign khandle = key | split: '~' | last -%}
+        {%- for r in shop.metaobjects.release.values -%}
+          {%- if r.system.handle == khandle -%}
+            {%- assign shown = shown | plus: 1 -%}
+            {%- liquid
+              assign c_artist = r.artist.value.name
+              assign c_product = r.product.value
+              assign c_cover = r.cover_art.value
+              assign c_img = c_cover
+              if c_img == blank and c_product != blank
+                assign c_img = c_product.featured_image
+              endif
+              assign c_url = c_product.url | default: r.sky_pilot_url | default: '#'
+            -%}
+            <a class="inelia-product-card" href="{{ c_url }}">
+              <div class="inelia-product-card__art">
+                {%- if c_img != blank -%}
+                  {{
+                    c_img
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 900',
+                      sizes: '(min-width: 990px) 25vw, 50vw',
+                      alt: r.title
+                  }}
+                {%- endif -%}
+              </div>
+              <h3>{{ r.title }}</h3>
+              {%- if c_artist != blank -%}
+                <p>{{ c_artist }}</p>
+              {%- endif -%}
+              {%- if c_product != blank -%}
+                <span class="inelia-price">
+                  {%- if c_product.price_varies -%}
+                    {{ 'products.product.price.from_price_html' | t: price: c_product.price_min | money }}
+                  {%- else -%}
+                    {{ c_product.price | money }}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+            </a>
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..show) -%}
+        <div class="inelia-product-card">
+          <div class="inelia-product-card__art"></div>
+          <h3>Release title</h3>
+          <p>Artist name</p>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_view_all and section.settings.view_all_link != blank -%}
+    <div class="inelia-products__view-all inelia-reveal">
+      <a class="inelia-btn inelia-btn--dark" href="{{ section.settings.view_all_link }}">
+        {{- section.settings.view_all_label -}}
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Inelia New Releases",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Fresh Off The Press"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New This Week"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "The newest releases across every artist on the label."
+    },
+    {
+      "type": "range",
+      "id": "releases_to_show",
+      "label": "Releases to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view-all button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View-all label",
+      "default": "View All Music"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View-all link"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "Warm white" },
+        { "value": "ivory", "label": "Soft ivory" }
+      ],
+      "default": "white"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inelia New Releases"
+    }
+  ]
+}
+{% endschema %}
